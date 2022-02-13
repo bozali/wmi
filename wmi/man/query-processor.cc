@@ -26,3 +26,26 @@ QueryReader QueryProcessor::Get()
 	return QueryReader(enumerator);
 }
 
+
+void QueryProcessor::SetResource(std::shared_ptr<ManagementResource> resource)
+{
+	resource_ = resource;
+}
+
+
+void QueryProcessor::SetQuery(const char* query)
+{
+	query_ = query;
+}
+
+
+std::shared_ptr<ManagementResource> QueryProcessor::Resource() const
+{
+	return resource_;
+}
+
+
+const char* QueryProcessor::Query() const
+{
+	return query_;
+}

@@ -48,6 +48,9 @@
     <ClInclude Include="man\result-object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="man\query-iterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\com-manager.cc">

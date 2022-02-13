@@ -4,7 +4,7 @@
 using namespace wmi;
 
 
-ManagementResource::ManagementResource(std::shared_ptr<ManagementContext> context)
+ManagementResource::ManagementResource(const ManagementContext& context)
 	: context_(context)
 {
 }
@@ -12,7 +12,7 @@ ManagementResource::ManagementResource(std::shared_ptr<ManagementContext> contex
 
 void ManagementResource::Connect(const char* path, std::optional<ConnectionOptions> options)
 {
-	ComExceptionFactory::ThrowIfFailed(context_->locator_->ConnectServer(bstr_t(path),
+	ComExceptionFactory::ThrowIfFailed(context_.locator_->ConnectServer(bstr_t(path),
 																		 nullptr,
 																		 nullptr,
 																		 nullptr,
@@ -20,4 +20,10 @@ void ManagementResource::Connect(const char* path, std::optional<ConnectionOptio
 																		 nullptr,
 																		 nullptr,
 																		 services_.GetAddressOf()));
+}
+
+
+const ManagementContext& ManagementResource::Context() const
+{
+	return context_;
 }

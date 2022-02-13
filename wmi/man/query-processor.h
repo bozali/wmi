@@ -28,6 +28,12 @@ public:
 
 	QueryReader Get();
 
+	void SetResource(std::shared_ptr<ManagementResource> resource);
+	void SetQuery(const char* query);
+
+	std::shared_ptr<ManagementResource> Resource() const;
+	const char* Query() const;
+
 private:
 	std::shared_ptr<ManagementResource> resource_;
 

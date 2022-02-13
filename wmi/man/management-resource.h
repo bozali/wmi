@@ -13,12 +13,14 @@ namespace wmi {
 class WMI_DLL ManagementResource
 {
 public:
-	ManagementResource(std::shared_ptr<ManagementContext> context);
+	ManagementResource(const ManagementContext& context);
 
 	void Connect(const char* path, std::optional<ConnectionOptions> options = std::nullopt);
 
+	const ManagementContext& Context() const;
+
 private:
-	std::shared_ptr<ManagementContext> context_;
+	const ManagementContext& context_;
 
 	ComPtr<IWbemServices> services_;
 

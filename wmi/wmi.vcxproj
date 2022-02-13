@@ -160,6 +160,7 @@
     <ClInclude Include="core\process-security.h" />
     <ClInclude Include="man\connection-options.h" />
     <ClInclude Include="man\management-context.h" />
+    <ClInclude Include="man\query-iterator.h" />
     <ClInclude Include="man\query-reader.h" />
     <ClInclude Include="man\management-resource.h" />
     <ClInclude Include="man\query-processor.h" />

@@ -20,16 +20,12 @@ int main()
 {
 	wmi::ComManager::Initialize();
 
-	auto context = std::make_shared<wmi::ManagementContext>();
+	wmi::ManagementContext context;
 	auto resource = std::make_shared<wmi::ManagementResource>(context);
 	resource->Connect("ROOT\\CIMV2");
 
 	auto processor = std::make_shared<wmi::QueryProcessor>(resource, "SELECT * FROM Win32_Process");
 	auto reader = processor->Get();
-
-	std::vector<wmi::ResultObject> results;
-	std::copy(std::begin(reader), std::end(reader), std::back_inserter(results));
-	std::cout << results.size() << "\n";
 
 	return 0;
 }
