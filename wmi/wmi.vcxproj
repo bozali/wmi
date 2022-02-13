@@ -129,6 +129,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,6 +149,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -158,11 +160,18 @@
     <ClInclude Include="core\process-security.h" />
     <ClInclude Include="man\connection-options.h" />
     <ClInclude Include="man\management-context.h" />
+    <ClInclude Include="man\query-reader.h" />
     <ClInclude Include="man\management-resource.h" />
+    <ClInclude Include="man\query-processor.h" />
+    <ClInclude Include="man\result-object.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\com-manager.cc" />
     <ClCompile Include="man\management-context.cc" />
+    <ClCompile Include="man\management-resource.cc" />
+    <ClCompile Include="man\query-reader.cc" />
+    <ClCompile Include="man\query-processor.cc" />
+    <ClCompile Include="man\result-object.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

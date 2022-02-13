@@ -3,6 +3,9 @@
 #include <wmi/core/exports.h>
 #include <wmi/core/def.h>
 
+#include <Windows.h>
+#include <comdef.h>
+
 
 namespace wmi {
 
@@ -13,6 +16,8 @@ public:
 
 private:
 	ComPtr<IWbemLocator> locator_;
+
+	friend class ManagementResource;
 };
 
 }
