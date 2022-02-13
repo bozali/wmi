@@ -15,10 +15,24 @@ struct QueryIterator
 	using pointer = const ResultObject*;
 	using reference = const ResultObject&;
 
-	inline explicit QueryIterator(QueryStream& stream, const bool end = false) noexcept
+	inline QueryIterator(QueryStream& stream, const bool end = true) noexcept
 		: stream(stream)
 		, end(end)
 	{ }
+
+	inline QueryIterator(const QueryIterator& other)
+		: stream(other.stream)
+		, end(other.end)
+	{ }
+
+	inline QueryIterator& operator=(const QueryIterator& other) {
+		if (this != &other) {
+			stream = other.stream;
+			end = other.end;
+		}
+
+		return *this;
+	}
 
 	inline QueryIterator& operator++() noexcept {
 		if (!IsEffectiveEnd()) {
@@ -51,7 +65,7 @@ struct QueryIterator
 	}
 
 	QueryStream& stream;
-	const bool end = false;
+	bool end = true;
 };
 
 }

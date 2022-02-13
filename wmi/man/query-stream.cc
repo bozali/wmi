@@ -49,7 +49,7 @@ bool QueryStream::IsDone() const
 
 QueryIterator QueryStream::begin()
 {
-	return QueryIterator(*this);
+	return QueryIterator(*this, false);
 }
 
 

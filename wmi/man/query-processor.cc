@@ -13,7 +13,7 @@ QueryProcessor::QueryProcessor(std::shared_ptr<ManagementResource> resource, con
 }
 
 
-QueryStream QueryProcessor::Get()
+QueryStream QueryProcessor::GetStream()
 {
 	ComPtr<IEnumWbemClassObject> enumerator;
 

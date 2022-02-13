@@ -15,7 +15,7 @@ class WMI_DLL QueryProcessor
 public:
 	QueryProcessor(std::shared_ptr<ManagementResource> resource, const char* query, std::optional<EnumerationOptions> options = std::nullopt);
 
-	QueryStream Get();
+	QueryStream GetStream();
 
 	void SetResource(std::shared_ptr<ManagementResource> resource);
 	void SetQuery(const char* query);

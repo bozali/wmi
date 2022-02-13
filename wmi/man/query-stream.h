@@ -10,7 +10,6 @@ namespace wmi {
 
 struct QueryIterator;
 
-
 class WMI_DLL QueryStream
 {
 public:
