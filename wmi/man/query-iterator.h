@@ -1,7 +1,6 @@
 #pragma once
 
-#include <wmi/core/def.h>
-#include <wmi/man/query-reader.h>
+#include <wmi/man/query-stream.h>
 
 #include <iterator>
 
@@ -16,14 +15,14 @@ struct QueryIterator
 	using pointer = const ResultObject*;
 	using reference = const ResultObject&;
 
-	inline explicit QueryIterator(QueryReader& reader, const bool end = false) noexcept
-		: reader(reader)
+	inline explicit QueryIterator(QueryStream& stream, const bool end = false) noexcept
+		: stream(stream)
 		, end(end)
 	{ }
 
 	inline QueryIterator& operator++() noexcept {
 		if (!IsEffectiveEnd()) {
-			reader.Next();
+			stream.Next();
 		}
 
 		return *this;
@@ -36,7 +35,7 @@ struct QueryIterator
 	}
 
 	WMI_NODISCARD inline ResultObject operator*() {
-		return reader.Current();
+		return stream.Current();
 	}
 
 	WMI_NODISCARD inline bool operator!=(const QueryIterator& other) noexcept {
@@ -48,10 +47,10 @@ struct QueryIterator
 	}
 
 	WMI_NODISCARD inline bool IsEffectiveEnd() const noexcept {
-		return end || reader.IsDone();
+		return end || stream.IsDone();
 	}
 
-	QueryReader& reader;
+	QueryStream& stream;
 	const bool end = false;
 };
 

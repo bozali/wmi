@@ -1,4 +1,5 @@
 #include <wmi/man/result-object.h>
+#include <wmi/core/com-exception-factory.h>
 
 using namespace wmi;
 
@@ -9,8 +10,36 @@ ResultObject::ResultObject(ComPtr<IWbemClassObject> object) noexcept
 }
 
 
-void ResultObject::Properties()
+std::vector<bstr_t> ResultObject::PropertyNames()
 {
+    SAFEARRAY* names;
+    ComExceptionFactory::ThrowIfFailed(object_->GetNames(nullptr, WBEM_FLAG_ALWAYS, nullptr, &names));
+
+    long lower, upper;
+    
+    SafeArrayGetLBound(names, 1, &lower);
+    SafeArrayGetUBound(names, 1, &upper);
+
+    std::vector<bstr_t> result;
+    result.reserve(static_cast<size_t>(upper - lower));
+
+    for (long i = lower; i <= upper; ++i)
+    {
+        BSTR name;
+        SafeArrayGetElement(names, &i, &name);
+
+        result.push_back(bstr_t(name));
+    }
+
+    SafeArrayDestroy(names);
+
+    return result;
+}
+
+
+const ManagementVariant ResultObject::operator[](const char* property_name) const
+{
+    return InternalGet(property_name);
 }
 
 

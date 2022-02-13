@@ -1,32 +1,21 @@
 #pragma once
 
 #include <wmi/man/management-resource.h>
-#include <wmi/man/query-reader.h>
+#include <wmi/man/enumeration-options.h>
+#include <wmi/man/query-stream.h>
 
+#include <optional>
 #include <chrono>
 
 
 namespace wmi {
-
-struct EnumerationOptions
-{
-	bool direct_read;
-	bool enumerate_deep;
-	bool prototype_only;
-	bool return_immediately;
-	bool rewindable;
-	bool use_amended_qualifiers;
-
-	std::chrono::seconds timeout;
-};
-
 
 class WMI_DLL QueryProcessor
 {
 public:
 	QueryProcessor(std::shared_ptr<ManagementResource> resource, const char* query, std::optional<EnumerationOptions> options = std::nullopt);
 
-	QueryReader Get();
+	QueryStream Get();
 
 	void SetResource(std::shared_ptr<ManagementResource> resource);
 	void SetQuery(const char* query);

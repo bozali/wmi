@@ -4,6 +4,19 @@
 using namespace wmi;
 
 
+ComReleaseToken::~ComReleaseToken()
+{
+	ComManager::Unitialize();
+}
+
+
+std::unique_ptr<ComReleaseToken> ComManager::InitializeWithToken(std::optional<ProcessSecurity> security)
+{
+	ComManager::Initialize();
+	return std::make_unique<ComReleaseToken>();
+}
+
+
 void ComManager::Initialize(std::optional<ProcessSecurity> security)
 {
 	ProcessSecurity security_settings = security.has_value() ? security.value() : ProcessSecurity();
@@ -18,4 +31,10 @@ void ComManager::Initialize(std::optional<ProcessSecurity> security)
 															nullptr,
 															EOAC_NONE,
 															nullptr));
+}
+
+
+void ComManager::Unitialize()
+{
+	CoUninitialize();
 }

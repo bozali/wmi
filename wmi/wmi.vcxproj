@@ -159,9 +159,10 @@
     <ClInclude Include="core\exports.h" />
     <ClInclude Include="core\process-security.h" />
     <ClInclude Include="man\connection-options.h" />
+    <ClInclude Include="man\enumeration-options.h" />
     <ClInclude Include="man\management-context.h" />
     <ClInclude Include="man\query-iterator.h" />
-    <ClInclude Include="man\query-reader.h" />
+    <ClInclude Include="man\query-stream.h" />
     <ClInclude Include="man\management-resource.h" />
     <ClInclude Include="man\query-processor.h" />
     <ClInclude Include="man\result-object.h" />
@@ -170,7 +171,7 @@
     <ClCompile Include="core\com-manager.cc" />
     <ClCompile Include="man\management-context.cc" />
     <ClCompile Include="man\management-resource.cc" />
-    <ClCompile Include="man\query-reader.cc" />
+    <ClCompile Include="man\query-stream.cc" />
     <ClCompile Include="man\query-processor.cc" />
     <ClCompile Include="man\result-object.cc" />
   </ItemGroup>

@@ -1,14 +1,17 @@
 #pragma once
 
-#include <wmi/man/query-iterator.h>
 #include <wmi/man/result-object.h>
+#include <wmi/man/enumeration-options.h>
+
+#include <optional>
 
 
 namespace wmi {
 
 struct QueryIterator;
 
-class WMI_DLL QueryReader
+
+class WMI_DLL QueryStream
 {
 public:
 	WMI_NODISCARD ResultObject Current();
@@ -20,9 +23,10 @@ public:
 	WMI_NODISCARD QueryIterator end();
 
 private:
-	explicit QueryReader(ComPtr<IEnumWbemClassObject> enumerator);
+	explicit QueryStream(ComPtr<IEnumWbemClassObject> enumerator, EnumerationOptions option);
 
 	ComPtr<IEnumWbemClassObject> enumerator_;
+	EnumerationOptions options_;
 	ResultObject current_;
 	bool is_done_;
 

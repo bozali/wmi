@@ -13,7 +13,7 @@ QueryProcessor::QueryProcessor(std::shared_ptr<ManagementResource> resource, con
 }
 
 
-QueryReader QueryProcessor::Get()
+QueryStream QueryProcessor::Get()
 {
 	ComPtr<IEnumWbemClassObject> enumerator;
 
@@ -23,7 +23,7 @@ QueryReader QueryProcessor::Get()
 									nullptr,
 									enumerator.GetAddressOf());
 
-	return QueryReader(enumerator);
+	return QueryStream(enumerator, options_);
 }
 
 
