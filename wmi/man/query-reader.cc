@@ -8,10 +8,17 @@ QueryReader::QueryReader(ComPtr<IEnumWbemClassObject> enumerator)
 	: enumerator_(enumerator)
 	, is_done_(false)
 {
+	this->Next();
 }
 
 
-ResultObject QueryReader::Next()
+ResultObject QueryReader::Current()
+{
+	return current_;
+}
+
+
+bool QueryReader::Next()
 {
 	ComPtr<IWbemClassObject> object;
 	ULONG returned = 0;
@@ -20,10 +27,11 @@ ResultObject QueryReader::Next()
 
 	if (is_done_ = returned == 0)
 	{
-		throw std::exception("No element");
+		return false;
 	}
 
-	return ResultObject(object);
+	current_ = ResultObject(object);
+	return true;
 }
 
 
@@ -33,13 +41,13 @@ bool QueryReader::IsDone() const
 }
 
 
-QueryIterator<QueryReader> QueryReader::begin()
+QueryIterator QueryReader::begin()
 {
-	return QueryIterator<QueryReader>(*this);
+	return QueryIterator(*this);
 }
 
 
-QueryIterator<QueryReader> QueryReader::end()
+QueryIterator QueryReader::end()
 {
-	return QueryIterator<QueryReader>(*this, true);
+	return QueryIterator(*this, true);
 }

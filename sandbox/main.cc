@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <memory>
+#include <vector>
 
 
 int main()
@@ -26,12 +27,9 @@ int main()
 	auto processor = std::make_shared<wmi::QueryProcessor>(resource, "SELECT * FROM Win32_Process");
 	auto reader = processor->Get();
 
-	auto obj = reader.Next();
-
-	auto name = obj.Get<BSTR>("Name");
-	
-	std::wcout << name << "\n";
-
+	std::vector<wmi::ResultObject> results;
+	std::copy(std::begin(reader), std::end(reader), std::back_inserter(results));
+	std::cout << results.size() << "\n";
 
 	return 0;
 }

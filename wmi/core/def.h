@@ -31,3 +31,7 @@ using ManagementVariant = std::variant<
 	DOUBLE,
 	BSTR>;
 
+// TODO Check if it is supported
+#if !defined(WMI_NODISCARD)
+#	define WMI_NODISCARD [[nodiscard]]
+#endif // !WMI_NODISCARD
