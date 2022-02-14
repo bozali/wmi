@@ -54,6 +54,9 @@
     <ClInclude Include="man\enumeration-options.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="man\management-variant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\com-manager.cc">

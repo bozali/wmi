@@ -22,9 +22,11 @@ public:
 	WMI_NODISCARD QueryIterator end();
 
 private:
-	explicit QueryStream(ComPtr<IEnumWbemClassObject> enumerator, EnumerationOptions option);
+	explicit QueryStream(ComPtr<IWbemServices> services, ComPtr<IEnumWbemClassObject> enumerator, EnumerationOptions option);
 
 	ComPtr<IEnumWbemClassObject> enumerator_;
+	ComPtr<IWbemServices> services_;
+
 	EnumerationOptions options_;
 	ResultObject current_;
 	bool is_done_;

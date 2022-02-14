@@ -23,29 +23,5 @@ QueryStream QueryProcessor::GetStream()
 									nullptr,
 									enumerator.GetAddressOf());
 
-	return QueryStream(enumerator, options_);
-}
-
-
-void QueryProcessor::SetResource(std::shared_ptr<ManagementResource> resource)
-{
-	resource_ = resource;
-}
-
-
-void QueryProcessor::SetQuery(const char* query)
-{
-	query_ = query;
-}
-
-
-std::shared_ptr<ManagementResource> QueryProcessor::Resource() const
-{
-	return resource_;
-}
-
-
-const char* QueryProcessor::Query() const
-{
-	return query_;
+	return QueryStream(resource_->services_, enumerator, options_);
 }

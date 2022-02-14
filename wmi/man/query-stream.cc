@@ -5,8 +5,9 @@
 using namespace wmi;
 
 
-QueryStream::QueryStream(ComPtr<IEnumWbemClassObject> enumerator, EnumerationOptions options)
+QueryStream::QueryStream(ComPtr<IWbemServices> services, ComPtr<IEnumWbemClassObject> enumerator, EnumerationOptions options)
 	: enumerator_(enumerator)
+	, services_(services)
 	, options_(options)
 	, is_done_(false)
 {
@@ -36,7 +37,7 @@ bool QueryStream::Next()
 		return false;
 	}
 
-	current_ = ResultObject(object);
+	current_ = ResultObject(services_, object);
 	return true;
 }
 

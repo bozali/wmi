@@ -13,21 +13,12 @@ int main()
 	auto resource = std::make_shared<wmi::ManagementResource>(context);
 	resource->Connect("ROOT\\CIMV2");
 
-	auto processor = std::make_shared<wmi::QueryProcessor>(resource, "SELECT * FROM Win32_Process");
-	auto stream = processor->GetStream();
+	auto commandline = bstr_t("notepad.exe");
 
-	//std::vector<wmi::ResultObject> objects;
-	//std::copy(std::begin(stream), std::end(stream), std::back_inserter(objects));
+	std::unordered_map<std::string, wmi::ManagementVariant> parameters;
+	parameters["CommandLine"] = commandline;
 
-	auto found = std::find_if(std::begin(stream), std::end(stream), [](const wmi::ResultObject& object)
-							  {
-								  auto str = object.Get<BSTR>("Name");
-								  return wcscmp(str, L"Code.exe") == 0;
-							  });
-
-	if (found != std::end(stream)) {
-		std::cout << "Found\n";
-	}
+	resource->ExecuteMethod("Win32_Process", "Create", parameters);
 
 	return 0;
 }

@@ -17,11 +17,21 @@ public:
 
 	QueryStream GetStream();
 
-	void SetResource(std::shared_ptr<ManagementResource> resource);
-	void SetQuery(const char* query);
+	inline void SetResource(std::shared_ptr<ManagementResource> resource) {
+		resource_ = resource;
+	}
 
-	std::shared_ptr<ManagementResource> Resource() const;
-	const char* Query() const;
+	inline void SetQuery(const char* query) {
+		query_ = query;
+	}
+
+	WMI_NODISCARD inline std::shared_ptr<ManagementResource> Resource() const {
+		return resource_;
+	}
+
+	WMI_NODISCARD inline const char* Query() const {
+		return query_;
+	}
 
 private:
 	std::shared_ptr<ManagementResource> resource_;

@@ -161,6 +161,7 @@
     <ClInclude Include="man\connection-options.h" />
     <ClInclude Include="man\enumeration-options.h" />
     <ClInclude Include="man\management-context.h" />
+    <ClInclude Include="man\management-variant.h" />
     <ClInclude Include="man\query-iterator.h" />
     <ClInclude Include="man\query-stream.h" />
     <ClInclude Include="man\management-resource.h" />

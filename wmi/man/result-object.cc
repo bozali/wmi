@@ -4,11 +4,34 @@
 using namespace wmi;
 
 
-ResultObject::ResultObject(ComPtr<IWbemClassObject> object) noexcept
+ResultObject::ResultObject(ComPtr<IWbemServices> services, ComPtr<IWbemClassObject> object) noexcept
 	: object_(object)
+    , services_(services)
 {
 }
 
+/*
+void ResultObject::ExecuteMethod(const char* name)
+{
+    ComPtr<IWbemClassObject> in_param;
+    ComPtr<IWbemClassObject> instance;
+
+    object_->GetMethod(bstr_t(name), 0, in_param.GetAddressOf(), nullptr);
+
+    in_param->SpawnInstance(0, instance.GetAddressOf());
+    
+    VARIANT command;
+    SecureZeroMemory(&command, sizeof(command));
+
+    command.vt = VT_BSTR;
+    command.bstrVal = bstr_t(TEXT("notepad.exe"));
+
+    instance->Put(TEXT("CommandLine"), 0, &command, 0);
+
+    ComPtr<IWbemClassObject> out_param;
+    services_->ExecMethod();
+}
+*/
 
 std::vector<bstr_t> ResultObject::PropertyNames()
 {
@@ -34,12 +57,6 @@ std::vector<bstr_t> ResultObject::PropertyNames()
     SafeArrayDestroy(names);
 
     return result;
-}
-
-
-const ManagementVariant ResultObject::operator[](const char* property_name) const
-{
-    return InternalGet(property_name);
 }
 
 

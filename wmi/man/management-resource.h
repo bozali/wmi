@@ -2,8 +2,10 @@
 
 #include <wmi/man/management-context.h>
 #include <wmi/man/connection-options.h>
+#include <wmi/man/management-variant.h>
 #include <wmi/core/exports.h>
 
+#include <unordered_map>
 #include <optional>
 #include <memory>
 
@@ -16,8 +18,11 @@ public:
 	ManagementResource(const ManagementContext& context);
 
 	void Connect(const char* path, std::optional<ConnectionOptions> options = std::nullopt);
+	void ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string, ManagementVariant> parameters);
 
-	const ManagementContext& Context() const;
+	WMI_NODISCARD inline const ManagementContext& Context() const {
+		return context_;
+	}
 
 private:
 	const ManagementContext& context_;
