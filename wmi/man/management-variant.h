@@ -1,5 +1,6 @@
 #pragma once
 
+#include <wmi/core/exports.h>
 #include <wmi/core/def.h>
 
 #include <variant>
@@ -38,4 +39,8 @@ enum VariantType : size_t
 	kBstr
 };
 
+
+namespace internal { WMI_DLL VARIANT ConvertToWin32Variant(wmi::ManagementVariant input); }
+
 }
+

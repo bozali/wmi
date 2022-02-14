@@ -172,6 +172,7 @@
     <ClCompile Include="core\com-manager.cc" />
     <ClCompile Include="man\management-context.cc" />
     <ClCompile Include="man\management-resource.cc" />
+    <ClCompile Include="man\management-variant.cc" />
     <ClCompile Include="man\query-stream.cc" />
     <ClCompile Include="man\query-processor.cc" />
     <ClCompile Include="man\result-object.cc" />

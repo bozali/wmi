@@ -77,5 +77,8 @@
     <ClCompile Include="man\result-object.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="man\management-variant.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
