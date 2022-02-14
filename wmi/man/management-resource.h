@@ -20,7 +20,7 @@ public:
 
 	void Connect(const char* path, std::optional<ConnectionOptions> options = std::nullopt);
 
-	std::shared_ptr<ResultObject> ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string, ManagementVariant> parameters);
+	ResultObject ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string, ManagementVariant> parameters);
 
 	WMI_NODISCARD inline const ManagementContext& Context() const {
 		return context_;

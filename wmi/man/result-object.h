@@ -39,6 +39,7 @@ private:
 	ComPtr<IWbemServices> services_;
 
 	friend class QueryStream;
+	friend class ManagementResource;
 };
 
 }

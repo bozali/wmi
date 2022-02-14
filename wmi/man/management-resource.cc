@@ -23,7 +23,7 @@ void ManagementResource::Connect(const char* path, std::optional<ConnectionOptio
 }
 
 
-std::shared_ptr<ResultObject> ManagementResource::ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string, ManagementVariant> parameters)
+ResultObject ManagementResource::ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string, ManagementVariant> parameters)
 {
 	ComPtr<IWbemClassObject> wmi_class;
 	services_->GetObject(bstr_t(class_name), 0, nullptr, wmi_class.GetAddressOf(), nullptr);
@@ -31,18 +31,17 @@ std::shared_ptr<ResultObject> ManagementResource::ExecuteMethod(const char* clas
 	ComPtr<IWbemClassObject> in_params;
 	wmi_class->GetMethod(bstr_t(method_name), 0, in_params.GetAddressOf(), nullptr);
 
-	ComPtr<IWbemClassObject> instance;
-	in_params->SpawnInstance(0, instance.GetAddressOf());
+	ComPtr<IWbemClassObject> in_param_instance;
+	in_params->SpawnInstance(0, in_param_instance.GetAddressOf());
 
 	for (const auto& param : parameters)
 	{
 		auto variant = internal::ConvertToWin32Variant(param.second);
-		instance->Put(bstr_t(param.first.c_str()), 0, &variant, 0);
+		in_param_instance->Put(bstr_t(param.first.c_str()), 0, &variant, 0);
 	}
 
-	ComPtr<IWbemClassObject> out_params;
-	services_->ExecMethod(bstr_t(class_name), bstr_t(method_name), 0, nullptr, instance.Get(), out_params.GetAddressOf(), nullptr);
+	ComPtr<IWbemClassObject> out_param_instance;
+	services_->ExecMethod(bstr_t(class_name), bstr_t(method_name), 0, nullptr, in_param_instance.Get(), out_param_instance.GetAddressOf(), nullptr);
 
-	return std::make_shared<ResultObject>(services_, out_params);
+	return ResultObject(services_, out_param_instance);
 }
-

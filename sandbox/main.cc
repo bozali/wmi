@@ -18,7 +18,7 @@ int main()
 	std::unordered_map<std::string, wmi::ManagementVariant> parameters;
 	parameters["CommandLine"] = commandline;
 
-	resource->ExecuteMethod("Win32_Process", "Create", parameters);
+	auto result = resource->ExecuteMethod("Win32_Process", "Create", parameters);
 
 	return 0;
 }
