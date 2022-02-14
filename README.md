@@ -98,6 +98,36 @@ int main()
 }
 ```
 
+## Calling class methods
+
+The following example shows how to call the method `Create` from `Win32_Process` and process the results.
+
+```c++
+// ...
+
+int main()
+{
+	auto token = wmi::ComManager::InitializeWithToken();
+
+	wmi::ManagementContext context;
+	auto resource = std::make_shared<wmi::ManagementResource>(context);
+	resource->Connect("ROOT\\CIMV2");
+
+    // Prepare the parameters
+	std::unordered_map<std::string, wmi::ManagementVariant> parameters;
+	parameters["CommandLine"] = bstr_t("notepad.exe").Detach();
+
+	auto result = resource->ExecuteMethod("Win32_Process", "Create", parameters);
+
+    // Using the ResultObject to get the `ReturnValue` and the `ProcessId` of our newly created process.
+	if (result.Get<LONG>("ReturnValue") == 0) {
+		std::cout << "Successfully created process with the process id: " << result.Get<LONG>("ProcessId") << "\n";
+	}
+
+	return 0;
+}
+```
+
 ## Current state
 
 **The current state is not ready for any production use there will be many changes.**
