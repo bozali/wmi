@@ -23,7 +23,7 @@ void ManagementResource::Connect(const char* path, std::optional<ConnectionOptio
 }
 
 
-void ManagementResource::ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string, ManagementVariant> parameters)
+std::shared_ptr<ResultObject> ManagementResource::ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string, ManagementVariant> parameters)
 {
 	ComPtr<IWbemClassObject> wmi_class;
 	services_->GetObject(bstr_t(class_name), 0, nullptr, wmi_class.GetAddressOf(), nullptr);
@@ -42,5 +42,7 @@ void ManagementResource::ExecuteMethod(const char* class_name, const char* metho
 
 	ComPtr<IWbemClassObject> out_params;
 	services_->ExecMethod(bstr_t(class_name), bstr_t(method_name), 0, nullptr, instance.Get(), out_params.GetAddressOf(), nullptr);
+
+	return std::make_shared<ResultObject>(services_, out_params);
 }
 
