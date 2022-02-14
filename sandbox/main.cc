@@ -18,5 +18,9 @@ int main()
 
 	auto result = resource->ExecuteMethod("Win32_Process", "Create", parameters);
 
+	if (result.Get<LONG>("ReturnValue") == 0) {
+		std::cout << "Successfully created process with the process id: " << result.Get<LONG>("ProcessId") << "\n";
+	}
+
 	return 0;
 }

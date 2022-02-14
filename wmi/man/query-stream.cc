@@ -28,7 +28,9 @@ bool QueryStream::Next()
 
 	using milliseconds = std::chrono::milliseconds;
 
-	auto timeout = WBEM_INFINITE; // std::chrono::duration_cast<milliseconds>(options_.timeout).count();
+	auto timeout = options_.timeout.has_value()
+		? std::chrono::duration_cast<milliseconds>(options_.timeout.value()).count()
+		: WBEM_INFINITE;
 
 	ComExceptionFactory::ThrowIfFailed(enumerator_->Next(timeout, 1, object.GetAddressOf(), &returned));
 

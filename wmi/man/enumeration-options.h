@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <chrono>
 
 
@@ -14,7 +15,7 @@ struct EnumerationOptions
 	bool rewindable;
 	bool use_amended_qualifiers;
 
-	std::chrono::seconds timeout;
+	std::optional<std::chrono::seconds> timeout = std::nullopt;
 };
 
 }
