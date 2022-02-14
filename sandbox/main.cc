@@ -13,10 +13,8 @@ int main()
 	auto resource = std::make_shared<wmi::ManagementResource>(context);
 	resource->Connect("ROOT\\CIMV2");
 
-	auto commandline = bstr_t("notepad.exe");
-
 	std::unordered_map<std::string, wmi::ManagementVariant> parameters;
-	parameters["CommandLine"] = commandline;
+	parameters["CommandLine"] = bstr_t("notepad.exe").Detach();
 
 	auto result = resource->ExecuteMethod("Win32_Process", "Create", parameters);
 
