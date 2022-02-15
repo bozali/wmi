@@ -13,7 +13,19 @@ int main()
 	auto resource = std::make_shared<wmi::ManagementResource>(context);
 	resource->Connect("ROOT\\CIMV2");
 
-	std::unordered_map<std::string, wmi::ManagementVariant> parameters;
+	wmi::QueryProcessor processor(resource, "SELECT * FROM Win32_Process");
+
+	auto stream = processor.GetStream();
+	auto object = stream.Current();
+
+	std::unordered_map<std::string_view, wmi::ManagementVariant> parameters;
+	// parameters["CommandLine"] = bstr_t("notepad.exe").Detach();
+
+	auto result = object.ExecuteMethod("GetOwner");
+	std::cout << result.Get<BSTR>("User") << "\n";
+
+	/*
+	std::unordered_map<std::string_view, wmi::ManagementVariant> parameters;
 	parameters["CommandLine"] = bstr_t("notepad.exe").Detach();
 
 	auto result = resource->ExecuteMethod("Win32_Process", "Create", parameters);
@@ -21,6 +33,7 @@ int main()
 	if (result.Get<LONG>("ReturnValue") == 0) {
 		std::cout << "Successfully created process with the process id: " << result.Get<LONG>("ProcessId") << "\n";
 	}
+	*/
 
 	return 0;
 }

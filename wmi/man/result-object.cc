@@ -8,30 +8,52 @@ ResultObject::ResultObject(ComPtr<IWbemServices> services, ComPtr<IWbemClassObje
 	: object_(object)
     , services_(services)
 {
+    system_class_name_ = Get<BSTR>("__CLASS");
+    system_path_ = Get<BSTR>("__PATH");
 }
 
-/*
-void ResultObject::ExecuteMethod(const char* name)
+
+void ResultObject::Put(const char* property_name, ManagementVariant value)
 {
-    ComPtr<IWbemClassObject> in_param;
-    ComPtr<IWbemClassObject> instance;
+    VARIANT variant = internal::ConvertToWin32Variant(value);
+    bstr_t name = property_name;
 
-    object_->GetMethod(bstr_t(name), 0, in_param.GetAddressOf(), nullptr);
-
-    in_param->SpawnInstance(0, instance.GetAddressOf());
-    
-    VARIANT command;
-    SecureZeroMemory(&command, sizeof(command));
-
-    command.vt = VT_BSTR;
-    command.bstrVal = bstr_t(TEXT("notepad.exe"));
-
-    instance->Put(TEXT("CommandLine"), 0, &command, 0);
-
-    ComPtr<IWbemClassObject> out_param;
-    services_->ExecMethod();
+    ComExceptionFactory::ThrowIfFailed(object_->Put(name, 0, &variant, variant.vt));
 }
-*/
+
+
+ResultObject ResultObject::ExecuteMethod(const char* method_name, std::optional<std::unordered_map<std::string_view, ManagementVariant>> parameters)
+{
+    bstr_t wmi_method_name = method_name;
+
+    ComPtr<IWbemClassObject> input_parameters;
+    object_->GetMethod(wmi_method_name.GetBSTR(), 0, input_parameters.GetAddressOf(), nullptr);
+
+    ComPtr<IWbemClassObject> input_parameter_instances;
+
+    if (parameters.has_value())
+    {
+        input_parameters->SpawnInstance(0, input_parameters.GetAddressOf());
+
+        for (auto param : parameters.value())
+        {
+            auto variant = internal::ConvertToWin32Variant(param.second);
+            input_parameter_instances->Put(bstr_t(param.first.data()), 0, &variant, 0);
+        }
+    }
+
+    ComPtr<IWbemClassObject> output_parameter_instances;
+    ComExceptionFactory::ThrowIfFailed(services_->ExecMethod(system_path_.GetBSTR(),
+                                                             wmi_method_name.GetBSTR(),
+                                                             0,
+                                                             nullptr,
+                                                             parameters.has_value() ? input_parameter_instances.Get() : nullptr,
+                                                             output_parameter_instances.GetAddressOf(),
+                                                             nullptr));
+
+    return ResultObject(services_, output_parameter_instances);
+}
+
 
 std::vector<bstr_t> ResultObject::PropertyNames()
 {

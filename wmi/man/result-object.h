@@ -5,6 +5,8 @@
 
 #include <wmi/man/management-variant.h>
 
+#include <unordered_map>
+#include <optional>
 #include <vector>
 
 
@@ -21,7 +23,9 @@ public:
 		return std::get<T>(InternalGet(property_name));
 	}
 
-	// void ExecuteMethod(const char* name);
+	void Put(const char* property_name, ManagementVariant value);
+
+	ResultObject ExecuteMethod(const char* method_name, std::optional<std::unordered_map<std::string_view, ManagementVariant>> parameters = std::nullopt);
 
 	WMI_NODISCARD std::vector<bstr_t> PropertyNames();
 
@@ -37,6 +41,9 @@ private:
 
 	ComPtr<IWbemClassObject> object_;
 	ComPtr<IWbemServices> services_;
+
+	bstr_t system_class_name_;
+	bstr_t system_path_;
 
 	friend class QueryStream;
 	friend class ManagementResource;
