@@ -12,18 +12,22 @@ ManagementResource::ManagementResource(const ManagementContext& context)
 
 void ManagementResource::Connect(const char* path, std::optional<ConnectionOptions> options)
 {
-	ComExceptionFactory::ThrowIfFailed(context_.locator_->ConnectServer(bstr_t(path),
-																		 nullptr,
-																		 nullptr,
-																		 nullptr,
-																		 0,
-																		 nullptr,
-																		 nullptr,
-																		 services_.GetAddressOf()));
+	HRESULT hr = E_FAIL;
+
+	hr = context_.locator_->ConnectServer(bstr_t(path),
+										  nullptr,
+										  nullptr,
+										  nullptr,
+										  0,
+										  nullptr,
+										  nullptr,
+										  services_.GetAddressOf());
+
+	ComExceptionFactory::ThrowIfFailed(hr);
 }
 
 
-ResultObject ManagementResource::ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string_view, variant_t> parameters)
+ResultObject ManagementResource::ExecuteMethod(const char* class_name, const char* method_name, std::optional<std::unordered_map<std::string_view, variant_t>> parameters)
 {
 	bstr_t wmi_class_name = class_name;
 	bstr_t wmi_method_name = method_name;
@@ -35,12 +39,16 @@ ResultObject ManagementResource::ExecuteMethod(const char* class_name, const cha
 	wmi_class->GetMethod(wmi_method_name.GetBSTR(), 0, in_params.GetAddressOf(), nullptr);
 
 	ComPtr<IWbemClassObject> in_param_instance;
-	in_params->SpawnInstance(0, in_param_instance.GetAddressOf());
 
-	for (const auto& param : parameters)
+	if (parameters.has_value())
 	{
-		auto variant = param.second;
-		in_param_instance->Put(bstr_t(param.first.data()), 0, &variant, 0);
+		in_params->SpawnInstance(0, in_param_instance.GetAddressOf());
+
+		for (const auto& param : parameters.value())
+		{
+			auto variant = param.second;
+			in_param_instance->Put(bstr_t(param.first.data()), 0, &variant, 0);
+		}
 	}
 
 	ComPtr<IWbemClassObject> out_param_instance;

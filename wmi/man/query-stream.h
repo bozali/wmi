@@ -13,9 +13,21 @@ struct QueryIterator;
 class WMI_DLL QueryStream
 {
 public:
+	/**
+	 * Accesses the current instance.
+	 * 
+	 * @return Returns the current instance if the stream.
+	 */
 	WMI_NODISCARD ResultObject Current();
 
+	/**
+	 * Fetches the next instance.
+	 * 
+	 * @return Returns false if cannot access the instance or if there is no instance.
+	 */
 	bool Next();
+
+	/** Checks if the stream is done. */
 	WMI_NODISCARD bool IsDone() const;
 
 	WMI_NODISCARD QueryIterator begin();
