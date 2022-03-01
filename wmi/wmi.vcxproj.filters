@@ -54,9 +54,6 @@
     <ClInclude Include="man\enumeration-options.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="man\management-variant.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\com-manager.cc">
@@ -75,9 +72,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="man\result-object.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="man\management-variant.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

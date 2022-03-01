@@ -23,7 +23,7 @@ void ManagementResource::Connect(const char* path, std::optional<ConnectionOptio
 }
 
 
-ResultObject ManagementResource::ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string_view, ManagementVariant> parameters)
+ResultObject ManagementResource::ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string_view, variant_t> parameters)
 {
 	bstr_t wmi_class_name = class_name;
 	bstr_t wmi_method_name = method_name;
@@ -39,7 +39,7 @@ ResultObject ManagementResource::ExecuteMethod(const char* class_name, const cha
 
 	for (const auto& param : parameters)
 	{
-		auto variant = internal::ConvertToWin32Variant(param.second);
+		auto variant = param.second;
 		in_param_instance->Put(bstr_t(param.first.data()), 0, &variant, 0);
 	}
 

@@ -11,21 +11,18 @@ int main()
 	auto token = wmi::ComManager::InitializeWithToken();
 
 	wmi::ManagementContext context;
-	auto resource = std::make_shared<wmi::ManagementResource>(context);
-	resource->Connect("ROOT\\CIMV2");
+	wmi::ManagementResource resource(context);
+	resource.Connect("ROOT\\CIMV2");
 
-	wmi::QueryProcessor processor(resource, "SELECT * FROM Win32_WMISetting");
+	wmi::QueryProcessor processor(resource, "SELECT * FROM Win32_Process");
 
 	try {
 		auto stream = processor.GetStream();
 		auto object = stream.Current();
 
-		std::cout << object.Get<LONG>("LoggingLevel") << "\n";
-		
-		object.Set("LoggingLevel", static_cast<LONG>(0));
-		object.Put();
-
-		std::cout << object.Get<LONG>("LoggingLevel") << "\n";
+		for (auto result : stream) {
+			std::wcout << result["Name"].bstrVal << "\n";
+		}
 	}
 	catch (wmi::ComException ex) {
 		std::wcout << ex.Detailed() << "\n";

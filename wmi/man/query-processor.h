@@ -5,7 +5,6 @@
 #include <wmi/man/query-stream.h>
 
 #include <optional>
-#include <chrono>
 
 
 namespace wmi {
@@ -13,19 +12,19 @@ namespace wmi {
 class WMI_DLL QueryProcessor
 {
 public:
-	QueryProcessor(std::shared_ptr<ManagementResource> resource, const char* query, std::optional<EnumerationOptions> options = std::nullopt);
+	QueryProcessor(const ManagementResource& resource, const char* query, std::optional<EnumerationOptions> options = std::nullopt);
 
-	QueryStream GetStream();
+	WMI_NODISCARD QueryStream GetStream();
 
-	inline void SetResource(std::shared_ptr<ManagementResource> resource) {
-		resource_ = resource;
+	inline void SetResource(const ManagementResource& resource) {
+		resource_ = &resource;
 	}
 
 	inline void SetQuery(const char* query) {
 		query_ = query;
 	}
 
-	WMI_NODISCARD inline std::shared_ptr<ManagementResource> Resource() const {
+	WMI_NODISCARD inline const ManagementResource* const Resource() const {
 		return resource_;
 	}
 
@@ -34,8 +33,7 @@ public:
 	}
 
 private:
-	std::shared_ptr<ManagementResource> resource_;
-
+	const ManagementResource* resource_;
 	EnumerationOptions options_;
 	const char* query_;
 };

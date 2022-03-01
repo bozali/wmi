@@ -1,10 +1,10 @@
 #include <wmi/man/query-processor.h>
+#include <wmi/core/com-exception-factory.h>
 
 using namespace wmi;
 
-
-QueryProcessor::QueryProcessor(std::shared_ptr<ManagementResource> resource, const char* query, std::optional<EnumerationOptions> options)
-	: resource_(resource)
+QueryProcessor::QueryProcessor(const ManagementResource& resource, const char* query, std::optional<EnumerationOptions> options)
+	: resource_(&resource)
 	, query_(query)
 {
 	if (options.has_value()) {
@@ -16,12 +16,15 @@ QueryProcessor::QueryProcessor(std::shared_ptr<ManagementResource> resource, con
 QueryStream QueryProcessor::GetStream()
 {
 	ComPtr<IEnumWbemClassObject> enumerator;
+	HRESULT hr = E_FAIL;
 
-	resource_->services_->ExecQuery(bstr_t("WQL"),
-									bstr_t(query_),
-									WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
-									nullptr,
-									enumerator.GetAddressOf());
+	hr = resource_->services_->ExecQuery(bstr_t("WQL"),
+										 bstr_t(query_),
+										 WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+										 nullptr,
+										 enumerator.GetAddressOf());
+
+	ComExceptionFactory::ThrowIfFailed(hr);
 
 	return QueryStream(resource_->services_, enumerator, options_);
 }

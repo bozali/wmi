@@ -15,22 +15,6 @@
 template <typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-/*
-#include <variant>
-
-using ManagementVariant = std::variant<
-	LONGLONG,
-	LONG,
-	SHORT,
-	CHAR,
-	ULONGLONG,
-	ULONG,
-	USHORT,
-	BYTE,
-	FLOAT,
-	DOUBLE,
-	BSTR>;
-*/
 
 // TODO Check if it is supported
 #if !defined(WMI_NODISCARD)
