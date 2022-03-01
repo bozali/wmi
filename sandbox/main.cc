@@ -1,3 +1,4 @@
+#include <wmi/core/com-exception-factory.h>
 #include <wmi/core/com-manager.h>
 #include <wmi/man/query-iterator.h>
 #include <wmi/man/query-processor.h>
@@ -13,27 +14,24 @@ int main()
 	auto resource = std::make_shared<wmi::ManagementResource>(context);
 	resource->Connect("ROOT\\CIMV2");
 
-	wmi::QueryProcessor processor(resource, "SELECT * FROM Win32_Process");
+	wmi::QueryProcessor processor(resource, "SELECT * FROM Win32_WMISetting");
 
-	auto stream = processor.GetStream();
-	auto object = stream.Current();
+	try {
+		auto stream = processor.GetStream();
+		auto object = stream.Current();
 
-	std::unordered_map<std::string_view, wmi::ManagementVariant> parameters;
-	// parameters["CommandLine"] = bstr_t("notepad.exe").Detach();
+		std::cout << object.Get<LONG>("LoggingLevel") << "\n";
+		
+		object.Set("LoggingLevel", static_cast<LONG>(0));
+		object.Put();
 
-	auto result = object.ExecuteMethod("GetOwner");
-	std::cout << result.Get<BSTR>("User") << "\n";
-
-	/*
-	std::unordered_map<std::string_view, wmi::ManagementVariant> parameters;
-	parameters["CommandLine"] = bstr_t("notepad.exe").Detach();
-
-	auto result = resource->ExecuteMethod("Win32_Process", "Create", parameters);
-
-	if (result.Get<LONG>("ReturnValue") == 0) {
-		std::cout << "Successfully created process with the process id: " << result.Get<LONG>("ProcessId") << "\n";
+		std::cout << object.Get<LONG>("LoggingLevel") << "\n";
 	}
-	*/
+	catch (wmi::ComException ex) {
+		std::wcout << ex.Detailed() << "\n";
+		std::cout << ex.What() << "\n";
+	}
+
 
 	return 0;
 }

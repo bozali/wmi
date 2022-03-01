@@ -22,6 +22,8 @@ public:
 
 	ResultObject ExecuteMethod(const char* class_name, const char* method_name, std::unordered_map<std::string_view, ManagementVariant> parameters);
 
+	ResultObject CreateInstance(const char* class_name);
+
 	WMI_NODISCARD inline const ManagementContext& Context() const {
 		return context_;
 	}

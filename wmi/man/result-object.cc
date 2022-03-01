@@ -8,17 +8,50 @@ ResultObject::ResultObject(ComPtr<IWbemServices> services, ComPtr<IWbemClassObje
 	: object_(object)
     , services_(services)
 {
-    system_class_name_ = Get<BSTR>("__CLASS");
-    system_path_ = Get<BSTR>("__PATH");
 }
 
 
-void ResultObject::Put(const char* property_name, ManagementVariant value)
+void ResultObject::Set(const char* property_name, ManagementVariant value)
 {
     VARIANT variant = internal::ConvertToWin32Variant(value);
+
     bstr_t name = property_name;
 
-    ComExceptionFactory::ThrowIfFailed(object_->Put(name, 0, &variant, variant.vt));
+    ComExceptionFactory::ThrowIfFailed(object_->Put(name, 0, &variant, 0));
+}
+
+
+void ResultObject::Put()
+{
+    HRESULT hr = E_FAIL;
+
+    ComPtr<IWbemClassObject> object;
+    ComPtr<IWbemCallResult> result;
+    ComPtr<IWbemContext> context;
+
+    hr = CoCreateInstance(CLSID_WbemContext,
+                     nullptr,
+                     CLSCTX_INPROC_SERVER,
+                     IID_IWbemContext,
+                     reinterpret_cast<void**>(context.GetAddressOf()));
+
+    ComExceptionFactory::ThrowIfFailed(hr);
+
+    variant_t put_extensions;
+    put_extensions.vt = VT_BOOL;
+    put_extensions.boolVal = VARIANT_FALSE;
+    context->SetValue(TEXT("__PUT_EXTENSIONS"), 0, &put_extensions);
+
+    variant_t put_ext_client_request;
+    put_ext_client_request.vt = VT_BOOL;
+    put_ext_client_request.boolVal = VARIANT_TRUE;
+    context->SetValue(TEXT("__PUT_EXT_CLIENT_REQUEST"), 0, &put_ext_client_request);
+
+    hr = services_->PutInstance(object_.Get(), WBEM_FLAG_UPDATE_ONLY, context.Get(), result.GetAddressOf());
+    ComExceptionFactory::ThrowIfFailed(hr);
+
+    hr = result->GetResultObject(WBEM_INFINITE, object.GetAddressOf());
+    ComExceptionFactory::ThrowIfFailed(hr);
 }
 
 
@@ -35,21 +68,27 @@ ResultObject ResultObject::ExecuteMethod(const char* method_name, std::optional<
     {
         input_parameters->SpawnInstance(0, input_parameters.GetAddressOf());
 
-        for (auto param : parameters.value())
+        for (const auto& param : parameters.value())
         {
             auto variant = internal::ConvertToWin32Variant(param.second);
             input_parameter_instances->Put(bstr_t(param.first.data()), 0, &variant, 0);
         }
     }
 
+    bstr_t system_property_path = Get<BSTR>("__PATH");
+
     ComPtr<IWbemClassObject> output_parameter_instances;
-    ComExceptionFactory::ThrowIfFailed(services_->ExecMethod(system_path_.GetBSTR(),
-                                                             wmi_method_name.GetBSTR(),
-                                                             0,
-                                                             nullptr,
-                                                             parameters.has_value() ? input_parameter_instances.Get() : nullptr,
-                                                             output_parameter_instances.GetAddressOf(),
-                                                             nullptr));
+    HRESULT hr = E_FAIL;
+
+    services_->ExecMethod(system_property_path.GetBSTR(),
+                                       wmi_method_name.GetBSTR(),
+                                       0,
+                                       nullptr,
+                                       parameters.has_value() ? input_parameter_instances.Get() : nullptr,
+                                       output_parameter_instances.GetAddressOf(),
+                                       nullptr);
+
+    ComExceptionFactory::ThrowIfFailed(hr);
 
     return ResultObject(services_, output_parameter_instances);
 }
@@ -65,6 +104,7 @@ std::vector<bstr_t> ResultObject::PropertyNames()
     SafeArrayGetLBound(names, 1, &lower);
     SafeArrayGetUBound(names, 1, &upper);
 
+    // TODO Cache these values
     std::vector<bstr_t> result;
     result.reserve(static_cast<size_t>(upper - lower));
 

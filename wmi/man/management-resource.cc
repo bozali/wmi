@@ -37,7 +37,7 @@ ResultObject ManagementResource::ExecuteMethod(const char* class_name, const cha
 	ComPtr<IWbemClassObject> in_param_instance;
 	in_params->SpawnInstance(0, in_param_instance.GetAddressOf());
 
-	for (auto param : parameters)
+	for (const auto& param : parameters)
 	{
 		auto variant = internal::ConvertToWin32Variant(param.second);
 		in_param_instance->Put(bstr_t(param.first.data()), 0, &variant, 0);
@@ -48,3 +48,19 @@ ResultObject ManagementResource::ExecuteMethod(const char* class_name, const cha
 
 	return ResultObject(services_, out_param_instance);
 }
+
+
+ResultObject ManagementResource::CreateInstance(const char* class_name)
+{
+	bstr_t wmi_class_name = class_name;
+
+	ComPtr<IWbemClassObject> class_definition;
+	ComPtr<IWbemClassObject> instance;
+
+	services_->GetObjectW(wmi_class_name.GetBSTR(), 0, nullptr, class_definition.GetAddressOf(), nullptr);
+
+	class_definition->SpawnInstance(0, instance.GetAddressOf());
+
+	return ResultObject(services_, instance);
+}
+

@@ -23,7 +23,8 @@ public:
 		return std::get<T>(InternalGet(property_name));
 	}
 
-	void Put(const char* property_name, ManagementVariant value);
+	void Set(const char* property_name, ManagementVariant value);
+	void Put();
 
 	ResultObject ExecuteMethod(const char* method_name, std::optional<std::unordered_map<std::string_view, ManagementVariant>> parameters = std::nullopt);
 
@@ -41,9 +42,6 @@ private:
 
 	ComPtr<IWbemClassObject> object_;
 	ComPtr<IWbemServices> services_;
-
-	bstr_t system_class_name_;
-	bstr_t system_path_;
 
 	friend class QueryStream;
 	friend class ManagementResource;
