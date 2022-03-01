@@ -1,1 +1,0 @@
-# C++ WMI Documentation
