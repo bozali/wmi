@@ -16,6 +16,11 @@ public:
   ManagementQueryProcessor(const ManagementResource& resource, const std::string_view query, EnumerationOptions options) noexcept;
   ManagementQueryProcessor(const ManagementResource& resource, const std::string_view query = "") noexcept;
 
+  /**
+   * Executes the specified query and returns a stream of instances.
+   *
+   * @return Stream of instances.
+   */
   _NODISCARD QueryStream GetStream() noexcept(false);
 
   void SetResource(const ManagementResource& resource) noexcept;

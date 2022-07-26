@@ -62,6 +62,47 @@ void ManagementResource::Connect() noexcept(false)
 }
 
 
+ManagementObject ManagementResource::ExecuteMethod(const std::string_view class_name, const std::string_view method_name, std::optional<std::unordered_map<std::string_view, variant_t>> parameters) noexcept(false)
+{
+  HRESULT result = S_OK;
+
+  bstr_t wmi_class_name = class_name.data();
+  bstr_t wmi_method_name = method_name.data();
+
+  ComPtr<IWbemClassObject> wmi_class;
+  result = services_->GetObjectW(wmi_class_name.GetBSTR(), 0, nullptr, wmi_class.GetAddressOf(), nullptr);
+
+  ComExceptionFactory::ThrowIfFailed(result);
+
+  ComPtr<IWbemClassObject> in_params;
+  result = wmi_class->GetMethod(wmi_method_name.GetBSTR(), 0, in_params.GetAddressOf(), nullptr);
+
+  ComExceptionFactory::ThrowIfFailed(result);
+
+  ComPtr<IWbemClassObject> in_param_instance;
+
+  if (parameters.has_value())
+  {
+    result = in_params->SpawnInstance(0, in_param_instance.GetAddressOf());
+    ComExceptionFactory::ThrowIfFailed(result);
+
+    for (const auto& param : parameters.value())
+    {
+      auto variant = param.second;
+      result = in_param_instance->Put(bstr_t(param.first.data()), 0, &variant, 0);
+
+      ComExceptionFactory::ThrowIfFailed(result);
+    }
+  }
+
+  ComPtr<IWbemClassObject> out_param_instance;
+  result = services_->ExecMethod(wmi_class_name.GetBSTR(), wmi_method_name.GetBSTR(), 0, nullptr, in_param_instance.Get(), out_param_instance.GetAddressOf(), nullptr);
+
+  ComExceptionFactory::ThrowIfFailed(result);
+
+  return ManagementObject(services_, out_param_instance);
+}
+
 void ManagementResource::SetOptions(ConnectionOptions options) noexcept
 {
   options_ = options;

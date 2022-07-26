@@ -3,7 +3,10 @@
 #include <wmi/common/exports.h>
 #include <wmi/common/common.h>
 
-#include <string>
+#include <wmi/man/man-object.h>
+
+#include <string_view>
+#include <optional>
 #include <chrono>
 
 
@@ -38,6 +41,17 @@ public:
    * @throw ComException Thrown if connection cannot be established.
    */
   void Connect() noexcept(false);
+
+  /**
+   * Executes a WMI class method.
+   *
+   * @param [class_name] Path to the class to execute method from e.g. \\ROOT\CIMV2\Win32_Process.
+   * @param [method_name] Name of the method to execute.
+   * @param [parameters] Input for the method, is optional.
+   *
+   * @return Returns the result of the method execution.
+   */
+  ManagementObject ExecuteMethod(const std::string_view class_name, const std::string_view method_name, std::optional<std::unordered_map<std::string_view, variant_t>> parameters = std::nullopt) noexcept(false);
 
   void SetOptions(ConnectionOptions options) noexcept;
 
