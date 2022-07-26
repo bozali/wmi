@@ -103,6 +103,23 @@ ManagementObject ManagementResource::ExecuteMethod(const std::string_view class_
   return ManagementObject(services_, out_param_instance);
 }
 
+
+ManagementObject ManagementResource::CreateInstance(const char* class_name)
+{
+  bstr_t wmi_class_name = class_name;
+
+  ComPtr<IWbemClassObject> class_definition;
+  ComPtr<IWbemClassObject> instance;
+
+  services_->GetObjectW(wmi_class_name.GetBSTR(), 0, nullptr, class_definition.GetAddressOf(), nullptr);
+
+  class_definition->SpawnInstance(0, instance.GetAddressOf());
+
+  return ManagementObject(services_, instance);
+}
+
+
+
 void ManagementResource::SetOptions(ConnectionOptions options) noexcept
 {
   options_ = options;

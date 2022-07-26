@@ -53,6 +53,16 @@ public:
    */
   ManagementObject ExecuteMethod(const std::string_view class_name, const std::string_view method_name, std::optional<std::unordered_map<std::string_view, variant_t>> parameters = std::nullopt) noexcept(false);
 
+  /**
+   * Creating WMI instance.
+   *
+   * @param [class_name] Name of the class.
+   *
+   * @return Returns the newly created instance.
+   */
+  ManagementObject CreateInstance(const char* class_name);
+
+
   void SetOptions(ConnectionOptions options) noexcept;
 
   void SetPath(const std::string_view path) noexcept;
