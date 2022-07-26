@@ -59,7 +59,7 @@
     <ClCompile Include="man\query-stream.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="man\man-object.cpp">
+    <ClCompile Include="man\man-object.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

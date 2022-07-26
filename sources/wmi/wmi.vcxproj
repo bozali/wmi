@@ -162,7 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\com-manager.cc" />
-    <ClCompile Include="man\man-object.cpp" />
+    <ClCompile Include="man\man-object.cc" />
     <ClCompile Include="man\man-query-processor.cc" />
     <ClCompile Include="man\man-resource.cc" />
     <ClCompile Include="man\query-stream.cc" />
