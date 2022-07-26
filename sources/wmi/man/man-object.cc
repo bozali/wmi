@@ -21,19 +21,19 @@ void ManagementObject::Set(const std::string_view property_name, variant_t value
 
 void ManagementObject::Put() noexcept(false)
 {
-  HRESULT hr = E_FAIL;
+  HRESULT result = E_FAIL;
 
+  ComPtr<IWbemCallResult> call_result;
   ComPtr<IWbemClassObject> object;
-  ComPtr<IWbemCallResult> result;
   ComPtr<IWbemContext> context;
 
-  hr = CoCreateInstance(CLSID_WbemContext,
-                        nullptr,
-                        CLSCTX_INPROC_SERVER,
-                        IID_IWbemContext,
-                        reinterpret_cast<void**>(context.GetAddressOf()));
+  result = CoCreateInstance(CLSID_WbemContext,
+                            nullptr,
+                            CLSCTX_INPROC_SERVER,
+                            IID_IWbemContext,
+                            reinterpret_cast<void**>(context.GetAddressOf()));
 
-  ComExceptionFactory::ThrowIfFailed(hr);
+  ComExceptionFactory::ThrowIfFailed(result);
 
   variant_t put_extensions;
   put_extensions.vt = VT_BOOL;
@@ -45,15 +45,55 @@ void ManagementObject::Put() noexcept(false)
   put_ext_client_request.boolVal = VARIANT_TRUE;
   context->SetValue(TEXT("__PUT_EXT_CLIENT_REQUEST"), 0, &put_ext_client_request);
 
-  hr = services_->PutInstance(object_.Get(), WBEM_FLAG_UPDATE_ONLY, context.Get(), result.GetAddressOf());
-  ComExceptionFactory::ThrowIfFailed(hr);
+  result = services_->PutInstance(object_.Get(), WBEM_FLAG_UPDATE_ONLY, context.Get(), call_result.GetAddressOf());
+  ComExceptionFactory::ThrowIfFailed(result);
 
-  hr = result->GetResultObject(WBEM_INFINITE, object.GetAddressOf());
-  ComExceptionFactory::ThrowIfFailed(hr);
+  result = call_result->GetResultObject(WBEM_INFINITE, object.GetAddressOf());
+  ComExceptionFactory::ThrowIfFailed(result);
 }
 
 
-std::vector<bstr_t> ManagementObject::PropertyNames()
+ManagementObject ManagementObject::ExecuteMethod(const std::string_view method_name, std::optional<std::unordered_map<std::string_view, variant_t>> parameters) noexcept(false)
+{
+  bstr_t wmi_method_name = method_name.data();
+
+  ComPtr<IWbemClassObject> input_parameters;
+  object_->GetMethod(wmi_method_name.GetBSTR(), 0, input_parameters.GetAddressOf(), nullptr);
+
+  ComPtr<IWbemClassObject> input_parameter_instances;
+
+  if (parameters.has_value())
+  {
+    input_parameters->SpawnInstance(0, input_parameters.GetAddressOf());
+
+    for (const auto& param : parameters.value())
+    {
+      auto variant = param.second;
+      input_parameter_instances->Put(bstr_t(param.first.data()), 0, &variant, 0);
+    }
+  }
+
+  bstr_t system_property_path = (*this)["__PATH"].bstrVal;
+
+  ComPtr<IWbemClassObject> output_parameter_instances;
+  HRESULT result = E_FAIL;
+
+  result = services_->ExecMethod(system_property_path.GetBSTR(),
+                                 wmi_method_name.GetBSTR(),
+                                 0,
+                                 nullptr,
+                                 parameters.has_value() ? input_parameter_instances.Get() : nullptr,
+                                 output_parameter_instances.GetAddressOf(),
+                                 nullptr);
+
+  ComExceptionFactory::ThrowIfFailed(result);
+
+  return ManagementObject(services_, output_parameter_instances);
+}
+
+
+
+std::vector<bstr_t> ManagementObject::PropertyNames() noexcept(false)
 {
   SAFEARRAY* names;
   ComExceptionFactory::ThrowIfFailed(object_->GetNames(nullptr, WBEM_FLAG_ALWAYS, nullptr, &names));
@@ -81,7 +121,7 @@ std::vector<bstr_t> ManagementObject::PropertyNames()
 }
 
 
-const variant_t ManagementObject::operator[](const char* property_name) const
+const variant_t ManagementObject::operator[](const char* property_name) const noexcept(false)
 {
   variant_t value;
 

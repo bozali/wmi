@@ -3,7 +3,9 @@
 #include <wmi/common/exports.h>
 #include <wmi/common/common.h>
 
+#include <unordered_map>
 #include <string_view>
+#include <optional>
 #include <vector>
 
 
@@ -29,13 +31,23 @@ public:
   void Put() noexcept(false);
 
   /**
+   * Executes the method of the current instance.
+   *
+   * @param method_name Name of the method to execute.
+   * @param parameters Input for the method, is optional.
+   *
+   * @return Returns the result of the method execution.
+   */
+  ManagementObject ExecuteMethod(const std::string_view method_name, std::optional<std::unordered_map<std::string_view, variant_t>> parameters = std::nullopt) noexcept(false);
+
+  /**
    * Property names.
    *
    * @return Returns a list of property names of the current instance.
    */
-  _NODISCARD std::vector<bstr_t> PropertyNames();
+  _NODISCARD std::vector<bstr_t> PropertyNames() noexcept(false);
 
-  _NODISCARD const variant_t operator[](const char* property_name) const;
+  _NODISCARD const variant_t operator[](const char* property_name) const noexcept(false);
 
 private:
   explicit ManagementObject(ComPtr<IWbemServices> services, ComPtr<IWbemClassObject> object) noexcept;
