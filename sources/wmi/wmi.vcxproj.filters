@@ -24,5 +24,13 @@
     <ClInclude Include="common\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="common\com-manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common\com-manager.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
