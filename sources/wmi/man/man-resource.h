@@ -60,7 +60,7 @@ public:
    *
    * @return Returns the newly created instance.
    */
-  ManagementObject CreateInstance(const char* class_name);
+  ManagementObject CreateInstance(const char* class_name) noexcept(false);
 
 
   void SetOptions(ConnectionOptions options) noexcept;

@@ -20,8 +20,8 @@ public:
   /**
    * Sets the value of a specified property.
    *
-   * @param property_name Name of the property.
-   * @param value Value to set.
+   * @param [property_name] Name of the property.
+   * @param [value] Value to set.
    */
   void Set(const std::string_view property_name, variant_t value) noexcept(false);
 
@@ -33,8 +33,8 @@ public:
   /**
    * Executes the method of the current instance.
    *
-   * @param method_name Name of the method to execute.
-   * @param parameters Input for the method, is optional.
+   * @param [method_name] Name of the method to execute.
+   * @param [parameters] Input for the method, is optional.
    *
    * @return Returns the result of the method execution.
    */
