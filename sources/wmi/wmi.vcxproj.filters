@@ -30,12 +30,36 @@
     <ClInclude Include="man\man-resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="man\man-query-processor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="man\query-stream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="man\enumeration-options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="man\man-object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="man\query-iterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\com-manager.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="man\man-resource.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="man\man-query-processor.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="man\query-stream.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="man\man-object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

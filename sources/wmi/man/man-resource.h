@@ -67,6 +67,8 @@ private:
 
   std::string_view resource_path_;
   bool is_connected_;
+
+  friend class ManagementQueryProcessor;
 };
 
 }
