@@ -3,7 +3,7 @@
 #include <wmi/common/exports.h>
 
 #include <wmi/man/enumeration-options.h>
-#include <wmi/man/man-resource.h>
+#include <wmi/man/query-iterator.h>
 #include <wmi/man/query-stream.h>
 
 

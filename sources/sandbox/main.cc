@@ -3,7 +3,6 @@
 #include <wmi/common/com-manager.h>
 
 #include <wmi/man/man-query-processor.h>
-#include <wmi/man/query-iterator.h>
 #include <wmi/man/man-resource.h>
 
 
