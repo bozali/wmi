@@ -40,7 +40,7 @@ class WMI_DLL ComManager
 {
 public:
   static void Initialize(std::optional<ProcessSecurity> security = std::nullopt);
-	static void Unitialize();
+	static void Uninitialize();
 };
 
 }

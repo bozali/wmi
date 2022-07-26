@@ -27,9 +27,15 @@
     <ClInclude Include="common\com-manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="man\man-resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\com-manager.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="man\man-resource.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -27,7 +27,7 @@ void ComManager::Initialize(std::optional<ProcessSecurity> security)
 }
 
 
-void ComManager::Unitialize()
+void ComManager::Uninitialize()
 {
   CoUninitialize();
 }
