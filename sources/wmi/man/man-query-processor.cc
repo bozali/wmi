@@ -26,9 +26,23 @@ QueryStream ManagementQueryProcessor::GetStream() noexcept(false)
   ComPtr<IEnumWbemClassObject> enumerator;
   HRESULT result = S_OK;
 
+  long flags = WBEM_FLAG_FORWARD_ONLY;
+
+  if (options_.use_amended_qualifiers) {
+    flags |= WBEM_FLAG_USE_AMENDED_QUALIFIERS;
+  }
+
+  if (options_.direct_read) {
+    flags |= WBEM_FLAG_DIRECT_READ;
+  }
+
+  if (options_.return_immediately) {
+    flags |= WBEM_FLAG_RETURN_IMMEDIATELY;
+  }
+
   result = resource_->services_->ExecQuery(bstr_t("WQL"),
                                            bstr_t(query_.data()),
-                                           WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+                                           flags,
                                            nullptr,
                                            enumerator.GetAddressOf());
 
