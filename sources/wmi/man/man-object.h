@@ -47,7 +47,14 @@ public:
    */
   _NODISCARD std::vector<bstr_t> PropertyNames() noexcept(false);
 
-  _NODISCARD const variant_t operator[](const char* property_name) const noexcept(false);
+  /**
+   * Read the value of a property.
+   * 
+   * @param [property_name] Name of the property to read.
+   * 
+   * @return Returns the variant of the property.
+   */
+  _NODISCARD const variant_t operator[](const std::string_view property_name) const noexcept(false);
 
 private:
   explicit ManagementObject(ComPtr<IWbemServices> services, ComPtr<IWbemClassObject> object) noexcept;

@@ -62,7 +62,7 @@ ManagementObject ManagementObject::ExecuteMethod(const std::string_view method_n
 
   ComPtr<IWbemClassObject> input_parameter_instances;
 
-  if (parameters.has_value())
+  if (parameters.has_value() && !parameters.value().empty())
   {
     input_parameters->SpawnInstance(0, input_parameters.GetAddressOf());
 
@@ -121,11 +121,11 @@ std::vector<bstr_t> ManagementObject::PropertyNames() noexcept(false)
 }
 
 
-const variant_t ManagementObject::operator[](const char* property_name) const noexcept(false)
+const variant_t ManagementObject::operator[](const std::string_view property_name) const noexcept(false)
 {
   variant_t value;
 
-  HRESULT hr = object_->Get(bstr_t(property_name), 0, &value, nullptr, nullptr);
+  HRESULT hr = object_->Get(bstr_t(property_name.data()), 0, &value, nullptr, nullptr);
   ComExceptionFactory::ThrowIfFailed(hr);
 
   return value;
