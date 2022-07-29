@@ -5,7 +5,6 @@
 
 using namespace wmi;
 
-
 ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& resource, const std::string_view query, EnumerationOptions options) noexcept
   : resource_(&resource)
   , query_(query)
@@ -20,8 +19,19 @@ ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& res
 {
 }
 
+void ManagementQueryProcessor::SetResource(const ManagementResource& resource) noexcept
+{
+  resource_ = &resource;
+}
 
-QueryStream ManagementQueryProcessor::GetStream() noexcept(false)
+
+void ManagementQueryProcessor::SetQuery(const std::string_view query) noexcept
+{
+  query_ = query;
+}
+
+
+ComPtr<IEnumWbemClassObject> ManagementQueryProcessor::InternalQueryExecute() noexcept(false)
 {
   ComPtr<IEnumWbemClassObject> enumerator;
   HRESULT result = S_OK;
@@ -47,18 +57,5 @@ QueryStream ManagementQueryProcessor::GetStream() noexcept(false)
                                            enumerator.GetAddressOf());
 
   ComExceptionFactory::ThrowIfFailed(result);
-
-  return QueryStream(resource_->services_, enumerator, options_);
-}
-
-
-void ManagementQueryProcessor::SetResource(const ManagementResource& resource) noexcept
-{
-  resource_ = &resource;
-}
-
-
-void ManagementQueryProcessor::SetQuery(const std::string_view query) noexcept
-{
-  query_ = query;
+  return enumerator;
 }

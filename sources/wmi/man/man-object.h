@@ -63,7 +63,7 @@ private:
   ComPtr<IWbemClassObject> object_;
   ComPtr<IWbemServices> services_;
 
-  friend class QueryStream;
+  template <typename T, typename TIterator> friend class GenericQueryStream;
   friend class ManagementResource;
 };
 
