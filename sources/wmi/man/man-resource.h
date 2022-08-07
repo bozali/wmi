@@ -2,6 +2,7 @@
 
 #include <wmi/common/exports.h>
 #include <wmi/common/common.h>
+#include <wmi/common/crypt-string.h>
 
 #include <wmi/man/man-object.h>
 
@@ -16,6 +17,12 @@ namespace wmi {
 struct ConnectionOptions
 {
   std::chrono::milliseconds timeout;
+
+  std::optional<std::string> authority = std::nullopt;
+  std::optional<std::string> locale = std::nullopt;
+  std::optional<std::string> username = std::nullopt;
+  std::optional<std::string> password = std::nullopt;
+  std::optional<CryptString> secure_password = std::nullopt;
 };
 
 
@@ -82,6 +89,8 @@ public:
 private:
   ManagementResource(const ManagementResource&) = default;
   ManagementResource& operator=(const ManagementResource&) = default;
+
+  bstr_t ExtractPassword(const ConnectionOptions& options) const;
 
 private:
   ConnectionOptions options_;

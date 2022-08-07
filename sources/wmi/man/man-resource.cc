@@ -24,7 +24,6 @@ void ManagementResource::Connect(const std::string_view path, ConnectionOptions 
   SetOptions(options);
   SetPath(path);
 
-
   try {
     HRESULT result = S_OK;
 
@@ -37,12 +36,16 @@ void ManagementResource::Connect(const std::string_view path, ConnectionOptions 
 
     ComExceptionFactory::ThrowIfFailed(result);
   
+    const auto username = options_.username.has_value() ? bstr_t(options_.username.value().data()) : bstr_t();
+    const auto locale = options_.locale.has_value() ? bstr_t(options_.locale.value().data()) : bstr_t();
+    const auto authority = options_.authority.has_value() ? bstr_t(options_.authority.value().data()) : bstr_t();
+
     result = locator_->ConnectServer(bstr_t(path.data()),
-                                     nullptr,
-                                     nullptr,
-                                     nullptr,
+                                     username,
+                                     ExtractPassword(options_),
+                                     locale,
                                      0,
-                                     nullptr,
+                                     authority,
                                      nullptr,
                                      services_.GetAddressOf());
 
@@ -127,3 +130,19 @@ void ManagementResource::SetPath(const std::string_view path) noexcept
 {
   resource_path_ = path;
 }
+
+
+bstr_t ManagementResource::ExtractPassword(const ConnectionOptions& options) const
+{
+  if (options_.secure_password.has_value()) {
+    const auto access = options_.secure_password.value().Access();
+    return bstr_t(access->GetData());
+  }
+
+  if (options_.password.has_value()) {
+    return bstr_t(options_.password.value().data());
+  }
+
+  return bstr_t();
+}
+

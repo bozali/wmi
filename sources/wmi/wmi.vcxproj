@@ -125,7 +125,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,7 +145,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>wbemuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wbemuuid.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -153,6 +153,7 @@
     <ClInclude Include="common\com-manager.h" />
     <ClInclude Include="common\common.h" />
     <ClInclude Include="common\exports.h" />
+    <ClInclude Include="common\crypt-string.h" />
     <ClInclude Include="man\enumeration-options.h" />
     <ClInclude Include="man\man-object.h" />
     <ClInclude Include="man\man-resource.h" />
@@ -162,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\com-manager.cc" />
+    <ClCompile Include="common\crypt-string.cc" />
     <ClCompile Include="man\man-object.cc" />
     <ClCompile Include="man\man-query-processor.cc" />
     <ClCompile Include="man\man-resource.cc" />
