@@ -86,6 +86,8 @@ The library allows to map returned objects from `ManagementQueryStream` to data 
 
 The stream class has a template parameter that allows to map the returned object a specific class.
 
+To map the structure you need to implement the function `MapManagementObject`.
+
 ```c++
 // ...
 
@@ -125,14 +127,14 @@ The following example shows how to call the method `Create` from `Win32_Process`
 int main()
 {
   // ...
-	auto resource = std::make_shared<wmi::ManagementResource>();
-	resource->Connect("ROOT\\CIMV2");
+  auto resource = std::make_shared<wmi::ManagementResource>();
+  resource->Connect("ROOT\\CIMV2");
 
   // Prepare the parameters
-	std::unordered_map<std::string_view, variant_t> parameters;
-	parameters["CommandLine"] = bstr_t("notepad.exe").Detach();
-
-	auto result = resource->ExecuteMethod("Win32_Process", "Create", parameters);
+  std::unordered_map<std::string_view, variant_t> parameters;
+  parameters["CommandLine"] = bstr_t("notepad.exe").Detach();
+  
+  auto result = resource->ExecuteMethod("Win32_Process", "Create", parameters);
 
   // Using the ResultObject to get the `ReturnValue` and the `ProcessId` of our newly created process.
   if (result["ReturnValue"].lVal == 0) {
