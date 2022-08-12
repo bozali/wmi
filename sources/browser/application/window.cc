@@ -6,13 +6,12 @@
 
 using namespace browser;
 
-
 #define RESIZE_BORDER 10
 
 const SDL_Rect kDragAreas[] = {
-   { 20, 20, 100, 100 },
-    { 200, 70, 100, 100 },
-    { 400, 90, 100, 100 }
+  { 20, 20, 100, 100 },
+  { 200, 70, 100, 100 },
+  { 400, 90, 100, 100 }
 };
 
 static const SDL_Rect* kAreas = kDragAreas;

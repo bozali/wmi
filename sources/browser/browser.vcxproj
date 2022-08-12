@@ -140,6 +140,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="application\application.cc" />
     <ClCompile Include="application\window.cc" />
     <ClCompile Include="glad\glad.c" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="launch\main.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="application\application.h" />
     <ClInclude Include="application\window.h" />
     <ClInclude Include="glad\glad.h" />
     <ClInclude Include="imgui\IconsMaterialDesign.h" />

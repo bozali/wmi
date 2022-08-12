@@ -45,6 +45,9 @@
     <ClCompile Include="application\window.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="application\application.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\IconsMaterialDesign.h">
@@ -84,6 +87,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="application\window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="application\application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

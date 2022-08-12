@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <imgui.h>
 
 #include <string_view>
 
@@ -35,6 +36,8 @@ private:
 
   SDL_Window* window_;
   SDL_GLContext context_;
+
+  friend class Application;
 };
 
 }
