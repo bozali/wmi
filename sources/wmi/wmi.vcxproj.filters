@@ -21,9 +21,18 @@
     <ClInclude Include="common\secure-string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="common\defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\secure-string-access.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\secure-string.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="common\secure-string-access.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
