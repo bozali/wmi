@@ -5,7 +5,7 @@
 using namespace wmi;
 
 
-SecureString::SecureString(const std::tstring_view&& unprotected_data)
+SecureString::SecureString(const bstr_t&& unprotected_data)
 {
 	ProtectMemory(std::move(unprotected_data));
 }
@@ -31,11 +31,11 @@ void SecureString::FreeMemory() const noexcept
 }
 
 
-void SecureString::ProtectMemory(const std::tstring_view&& unprotected_data) const
+void SecureString::ProtectMemory(const bstr_t&& unprotected_data) const
 {
-	encrypted_data_.resize(unprotected_data.size());
+	encrypted_data_.resize(unprotected_data.length());
 
-	std::memcpy(&encrypted_data_[0], &unprotected_data[0], unprotected_data.size() * sizeof(tchar));
+	std::memcpy(&encrypted_data_[0], &unprotected_data, unprotected_data.length() * sizeof(tchar));
 
 	if (!CryptProtectMemory(&encrypted_data_[0], static_cast<DWORD>(encrypted_data_.size() * sizeof(tchar)), CRYPTPROTECTMEMORY_SAME_PROCESS))
 	{

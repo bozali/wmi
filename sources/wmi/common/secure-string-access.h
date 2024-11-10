@@ -13,7 +13,7 @@ public:
 	explicit SecureStringAccess(const SecureString& secure_str);
 	~SecureStringAccess();
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE std::tstring_view GetData() const
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bstr_t GetData() const
 	{
 		return secure_.GetData();
 	}
