@@ -1,4 +1,6 @@
 #include <wmi/common/secure-string-access.h>
+#include <wmi/management/management-query-processor.h>
+#include <wmi/management/management-resource.h>
 #include <wmi/common/secure-string.h>
 
 #include <iostream>
@@ -8,14 +10,9 @@
 
 int main()
 {
-	wmi::SecureString secure(TEXT("Some secure data"));
+	auto resource = std::make_unique<wmi::ManagementResource>(TEXT(""));
 
-	if (const auto access = secure.Access())
-	{
-		const auto x = access->GetData();
-
-		std::wcout << x << std::endl;
-	}
+	auto query_processor = resource->GetQueryProcessor(TEXT("SELECT * FROM Win32_Processor"));
 
 	return 0;
 }

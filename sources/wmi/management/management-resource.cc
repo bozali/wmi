@@ -1,4 +1,7 @@
 #include <wmi/management/management-resource.h>
+#include <wmi/management/enumeration-options.h>
+#include <wmi/management/management-query-processor.h>
+
 #include <wmi/common/secure-string-access.h>
 #include <wmi/common/secure-string.h>
 #include <wmi/common/com-exception.h>
@@ -67,15 +70,9 @@ void ManagementResource::Connect() noexcept(false)
 }
 
 
-void ManagementResource::SetOptions(const ConnectionOptions options) noexcept
+std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const bstr_t query, std::optional<EnumerationOptions> enumeration_options = std::nullopt) noexcept
 {
-	options_ = options;
-}
-
-
-void ManagementResource::SetPath(const bstr_t path) noexcept
-{
-	resource_path_ = path;
+	return std::make_unique<ManagementQueryProcessor>(*this, query, enumeration_options.has_value() ? enumeration_options.value() : EnumerationOptions());
 }
 
 

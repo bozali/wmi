@@ -1,6 +1,7 @@
 #pragma once
 
 #include <wmi/common/secure-string.h>
+#include <wmi/common/non-copyable.h>
 #include <wmi/common/exports.h>
 
 #include <string_view>
@@ -9,6 +10,9 @@
 
 
 namespace wmi {
+
+class ManagementQueryProcessor;
+struct EnumerationOptions;
 
 struct ConnectionOptions
 {
@@ -22,35 +26,63 @@ struct ConnectionOptions
 };
 
 
-class WMI_DLL ManagementResource
+class WMI_DLL ManagementResource : private NonCopyable
 {
 public:
 	ManagementResource(const bstr_t path, ConnectionOptions options) noexcept;
 	ManagementResource(const bstr_t path) noexcept;
 
+	/**
+	 *
+	 */
 	void Connect(const bstr_t path, const ConnectionOptions options) noexcept(false);
+
+	/**
+	 * 
+	 */
 	void Connect() noexcept(false);
 
-	void SetOptions(const ConnectionOptions options) noexcept;
+	/**
+	 *
+	 */
+	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const bstr_t query, std::optional<EnumerationOptions> options = std::nullopt) noexcept;
 
-	void SetPath(const bstr_t path) noexcept;
+	/**
+	 * Sets the connection options.
+	 */
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE void SetOptions(const ConnectionOptions options) noexcept {
+		options_ = options;
+	}
 
+	/**
+	 * Sets the WMI resouce path.
+	 */
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE void SetPath(const bstr_t path) noexcept {
+		resource_path_ = path;
+	}
+
+	/**
+	 * Returns the conection options.
+	 */
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE const ConnectionOptions& Options() const noexcept {
 		return options_;
 	}
 
+	/**
+	 * Returns the WMI resource path.
+	 */
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bstr_t Path() const noexcept {
 		return resource_path_;
 	}
 
+	/**
+	 * Checks if the service is connected.
+	 */
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bool IsConnected() const noexcept {
 		return is_connected_;
 	}
 
 private:
-	ManagementResource(const ManagementResource&) = default;
-	ManagementResource& operator=(const ManagementResource&) = default;
-
 	bstr_t GetPassword() const;
 
 private:

@@ -157,16 +157,20 @@
   <ItemGroup>
     <ClInclude Include="common\com-exception.h" />
     <ClInclude Include="common\com-manager.h" />
+    <ClInclude Include="common\non-copyable.h" />
     <ClInclude Include="common\secure-string-access.h" />
     <ClInclude Include="common\defs.h" />
     <ClInclude Include="common\exports.h" />
     <ClInclude Include="common\secure-string.h" />
+    <ClInclude Include="management\enumeration-options.h" />
+    <ClInclude Include="management\management-query-processor.h" />
     <ClInclude Include="management\management-resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\com-manager.cc" />
     <ClCompile Include="common\secure-string-access.cc" />
     <ClCompile Include="common\secure-string.cc" />
+    <ClCompile Include="management\management-query-processor.cc" />
     <ClCompile Include="management\management-resource.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -36,6 +36,15 @@
     <ClInclude Include="management\management-resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="management\management-query-processor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="management\enumeration-options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\non-copyable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\secure-string.cc">
@@ -48,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="management\management-resource.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="management\management-query-processor.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
