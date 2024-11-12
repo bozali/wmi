@@ -4,15 +4,30 @@
 #include <wmi/common/defs.h>
 
 #include <wmi/management/enumeration-options.h>
+#include <wmi/management/management-query-stream.h>
+#include <wmi/management/management-query-iterator.h>
+#include <wmi/management/management-resource.h>
 
 
 namespace wmi {
 
-class ManagementResource;
-
 class WMI_DLL ManagementQueryProcessor
 {
 public:
+	ManagementQueryProcessor(const ManagementResource& resource, const bstr_t query, const EnumerationOptions enumeration_options) noexcept;
+	ManagementQueryProcessor(const ManagementResource& resource, const bstr_t query) noexcept;
+
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementObjectQueryStream GetStream() noexcept(false)
+	{
+		return ManagementObjectQueryStream(resource_->services_, InternalQueryExecute(), enumeration_options_);
+	}
+
+	template <typename T>
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementQueryStream<T, MappedManagementQueryIterator<T>> GetStream() noexcept(false)
+	{
+		return ManagementQueryStream<T, MappedManagementQueryIterator<T>>(resource_->services_, InternalQueryExecute(), enumeration_options_);
+	}
+
 	_WMI_FORCEINLINE void SetQuery(const bstr_t query) noexcept {
 		query_ = query;
 	}
@@ -22,7 +37,7 @@ public:
 	}
 
 private:
-	ManagementQueryProcessor(const ManagementResource& resource, const bstr_t query, EnumerationOptions enumeration_options) noexcept;
+	_WMI_ATTR_NODISCARD microsoft::com_ptr<IEnumWbemClassObject> InternalQueryExecute() noexcept(false);
 
 private:
 	const EnumerationOptions enumeration_options_;

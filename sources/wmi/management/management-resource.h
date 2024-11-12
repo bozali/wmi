@@ -12,7 +12,7 @@
 namespace wmi {
 
 class ManagementQueryProcessor;
-struct EnumerationOptions;
+class EnumerationOptions;
 
 struct ConnectionOptions
 {
@@ -45,7 +45,13 @@ public:
 	/**
 	 *
 	 */
-	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const bstr_t query, std::optional<EnumerationOptions> options = std::nullopt) noexcept;
+	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const bstr_t query, const EnumerationOptions options) noexcept;
+
+	/**
+	 *
+	 */
+	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const bstr_t query) noexcept;
+
 
 	/**
 	 * Sets the connection options.
@@ -93,6 +99,8 @@ private:
 
 	microsoft::com_ptr<IWbemServices> services_;
 	microsoft::com_ptr<IWbemLocator> locator_;
+
+	friend class ManagementQueryProcessor;
 };
 
 }

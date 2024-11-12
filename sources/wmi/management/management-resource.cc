@@ -70,9 +70,15 @@ void ManagementResource::Connect() noexcept(false)
 }
 
 
-std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const bstr_t query, std::optional<EnumerationOptions> enumeration_options = std::nullopt) noexcept
+std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const bstr_t query, const EnumerationOptions options) noexcept
 {
-	return std::make_unique<ManagementQueryProcessor>(*this, query, enumeration_options.has_value() ? enumeration_options.value() : EnumerationOptions());
+	return std::make_unique<ManagementQueryProcessor>(*this, query, options);
+}
+
+
+std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const bstr_t query) noexcept
+{
+	return std::make_unique<ManagementQueryProcessor>(*this, query);
 }
 
 
