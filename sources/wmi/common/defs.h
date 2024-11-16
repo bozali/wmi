@@ -16,6 +16,7 @@ namespace microsoft {
 
 #include <string>
 #include <string_view>
+#include <variant>
 
 namespace std {
 
@@ -48,6 +49,45 @@ using tbyte = char;
 // Other compilers, fallback to regular inline
 #	define _WMI_FORCEINLINE inline
 #endif
+
+
+namespace wmi {
+
+using BasicString = bstr_t;
+
+using Byte = BYTE;
+using Char = CHAR;
+
+using UInt8 = UINT8;
+using UInt16 = UINT16;
+using UInt32 = UINT32;
+using UInt64 = UINT64;
+using Int8 = INT8;
+using Int16 = INT16;
+using Int32 = INT32;
+using Int64 = INT64;
+using Dword = DWORD;
+
+using ULong = ULONG;
+using Long = LONG;
+
+
+using Variant = std::variant <
+	BasicString,
+	Char,
+	Byte,
+	UInt16,
+	UInt32,
+	UInt64,
+	Int8,
+	Int16,
+	Int32,
+	Int64,
+	ULong,
+	Long,
+	bool>;
+
+}
 
 
 namespace wmi::internal {

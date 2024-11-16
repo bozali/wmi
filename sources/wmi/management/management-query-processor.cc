@@ -3,7 +3,7 @@
 using namespace wmi;
 
 
-ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& resource, const bstr_t query, EnumerationOptions enumeration_options) noexcept
+ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& resource, const BasicString query, EnumerationOptions enumeration_options) noexcept
 	: resource_(&resource)
 	, query_(query)
 	, enumeration_options_(enumeration_options)
@@ -11,7 +11,7 @@ ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& res
 }
 
 
-ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& resource, const bstr_t query) noexcept
+ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& resource, const BasicString query) noexcept
 	: resource_(&resource)
 	, query_(query)
 {
@@ -40,7 +40,7 @@ microsoft::com_ptr<IEnumWbemClassObject> ManagementQueryProcessor::InternalQuery
 		flags |= WBEM_FLAG_RETURN_IMMEDIATELY;
 	}
 
-	hr = resource_->services_->ExecQuery(bstr_t("WQL"),
+	hr = resource_->services_->ExecQuery(BasicString("WQL"),
 																			 query_,
 																			 flags,
 																			 nullptr,

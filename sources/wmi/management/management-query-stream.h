@@ -39,7 +39,7 @@ public:
 	_WMI_FORCEINLINE bool Next() noexcept(false)
 	{
 		microsoft::com_ptr<IWbemClassObject> object;
-		ULONG returned = 0;
+		ULong returned = 0;
 
 		using milliseconds = std::chrono::milliseconds;
 

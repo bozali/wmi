@@ -4,9 +4,10 @@
 using namespace wmi;
 
 
-void ManagementObject::Set(const bstr_t property_name, variant_t value) noexcept(false)
+void ManagementObject::Set(const BasicString property_name, Variant value) noexcept(false)
 {
-	ComExceptionFactory::ThrowIfFailed(object_->Put(property_name, 0, &value, 0));
+	// TODO Conversion to variant_t
+	// ComExceptionFactory::ThrowIfFailed(object_->Put(property_name, 0, &value, 0));
 }
 
 
@@ -51,10 +52,47 @@ ManagementObject::ManagementObject(microsoft::com_ptr<IWbemServices> services, m
 }
 
 
-const variant_t ManagementObject::operator[](const bstr_t property_name) const noexcept
+const Variant ManagementObject::operator[](const BasicString property_name) const noexcept
 {
-	variant_t value;
-	ComExceptionFactory::ThrowIfFailed(object_->Get(property_name, 0, &value, nullptr, nullptr));
+	variant_t fetched_value;
 
-	return value;
+	ComExceptionFactory::ThrowIfFailed(object_->Get(property_name, 0, &fetched_value, nullptr, nullptr));
+
+	Variant variant;
+
+	switch (fetched_value.vt)
+	{
+	case VT_I1:
+		return Variant(fetched_value.cVal);
+
+	case VT_I2:
+		return Variant(fetched_value.iVal);
+
+	case VT_I4:
+		return Variant(fetched_value.intVal);
+
+	case VT_I8:
+		return wmi::Variant(fetched_value.lVal);
+
+	case VT_UI1:
+		return Variant(fetched_value.bVal);
+
+	case VT_UI2:
+		return Variant(fetched_value.uiVal);
+
+	case VT_UI4:
+		return Variant(fetched_value.uintVal);
+
+	case VT_UI8:
+		return Variant(fetched_value.ulVal);
+
+	case VT_BOOL:
+		return Variant(static_cast<bool>(fetched_value.boolVal));
+
+	case VT_BSTR:
+		return Variant(fetched_value.bstrVal);
+
+	default:
+		throw std::exception("Variant type not registered");
+	}
 }

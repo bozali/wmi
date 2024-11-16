@@ -14,11 +14,11 @@ public:
 	ManagementObject(const ManagementObject&) = default;
 	ManagementObject& operator=(const ManagementObject&) = default;
 
-	void Set(const bstr_t property_name, variant_t value) noexcept(false);
+	void Set(const BasicString property_name, Variant value) noexcept(false);
 
 	void Put() noexcept(false);
 
-	_WMI_ATTR_NODISCARD const variant_t operator[](const bstr_t property_name) const noexcept;
+	_WMI_ATTR_NODISCARD const Variant operator[](const BasicString property_name) const noexcept;
 
 private:
 	explicit ManagementObject(microsoft::com_ptr<IWbemServices> services, microsoft::com_ptr<IWbemClassObject> object) noexcept;

@@ -14,8 +14,8 @@ namespace wmi {
 class WMI_DLL ManagementQueryProcessor
 {
 public:
-	ManagementQueryProcessor(const ManagementResource& resource, const bstr_t query, const EnumerationOptions enumeration_options) noexcept;
-	ManagementQueryProcessor(const ManagementResource& resource, const bstr_t query) noexcept;
+	ManagementQueryProcessor(const ManagementResource& resource, const BasicString query, const EnumerationOptions enumeration_options) noexcept;
+	ManagementQueryProcessor(const ManagementResource& resource, const BasicString query) noexcept;
 
 
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementQueryStream<ManagementObject> GetStream() noexcept(false)
@@ -35,11 +35,11 @@ public:
 	// 	return ManagementQueryStream<T, MappedManagementQueryIterator<T>>(resource_->services_, InternalQueryExecute(), enumeration_options_);
 	// }
 
-	_WMI_FORCEINLINE void SetQuery(const bstr_t query) noexcept {
+	_WMI_FORCEINLINE void SetQuery(const BasicString query) noexcept {
 		query_ = query;
 	}
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE const bstr_t GetQuery() const noexcept {
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE const BasicString GetQuery() const noexcept {
 		return query_;
 	}
 
@@ -49,7 +49,7 @@ private:
 private:
 	const EnumerationOptions enumeration_options_;
 	const ManagementResource* const resource_;
-	bstr_t query_;
+	BasicString query_;
 
 	friend class ManagementResource;
 };

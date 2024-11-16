@@ -18,10 +18,10 @@ struct ConnectionOptions
 {
 	std::chrono::milliseconds timeout;
 	
-	std::optional<bstr_t> authority = std::nullopt;
-	std::optional<bstr_t> locale = std::nullopt;
-	std::optional<bstr_t> username = std::nullopt;
-	std::optional<bstr_t> password = std::nullopt;
+	std::optional<BasicString> authority = std::nullopt;
+	std::optional<BasicString> locale = std::nullopt;
+	std::optional<BasicString> username = std::nullopt;
+	std::optional<BasicString> password = std::nullopt;
 	std::optional<SecureString> secure_password = std::nullopt;
 };
 
@@ -29,13 +29,13 @@ struct ConnectionOptions
 class WMI_DLL ManagementResource : private NonCopyable
 {
 public:
-	ManagementResource(const bstr_t path, ConnectionOptions options) noexcept;
-	ManagementResource(const bstr_t path) noexcept;
+	ManagementResource(const BasicString path, ConnectionOptions options) noexcept;
+	ManagementResource(const BasicString path) noexcept;
 
 	/**
 	 *
 	 */
-	void Connect(const bstr_t path, const ConnectionOptions options) noexcept(false);
+	void Connect(const BasicString path, const ConnectionOptions options) noexcept(false);
 
 	/**
 	 * 
@@ -45,12 +45,12 @@ public:
 	/**
 	 *
 	 */
-	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const bstr_t query, const EnumerationOptions options) noexcept;
+	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const BasicString query, const EnumerationOptions options) noexcept;
 
 	/**
 	 *
 	 */
-	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const bstr_t query) noexcept;
+	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const BasicString query) noexcept;
 
 
 	/**
@@ -63,7 +63,7 @@ public:
 	/**
 	 * Sets the WMI resouce path.
 	 */
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE void SetPath(const bstr_t path) noexcept {
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE void SetPath(const BasicString path) noexcept {
 		resource_path_ = path;
 	}
 
@@ -77,7 +77,7 @@ public:
 	/**
 	 * Returns the WMI resource path.
 	 */
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bstr_t Path() const noexcept {
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE BasicString Path() const noexcept {
 		return resource_path_;
 	}
 
@@ -89,13 +89,13 @@ public:
 	}
 
 private:
-	bstr_t GetPassword() const;
+	BasicString GetPassword() const;
 
 private:
 	ConnectionOptions options_;
 
 	bool is_connected_;
-	bstr_t resource_path_;
+	BasicString resource_path_;
 
 	microsoft::com_ptr<IWbemServices> services_;
 	microsoft::com_ptr<IWbemLocator> locator_;

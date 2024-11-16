@@ -8,7 +8,7 @@
 
 using namespace wmi;
 
-ManagementResource::ManagementResource(const bstr_t path, ConnectionOptions options) noexcept
+ManagementResource::ManagementResource(const BasicString path, ConnectionOptions options) noexcept
 	: resource_path_(path)
 	, is_connected_(false)
 	, options_(options)
@@ -16,14 +16,14 @@ ManagementResource::ManagementResource(const bstr_t path, ConnectionOptions opti
 }
 
 
-ManagementResource::ManagementResource(const bstr_t path) noexcept
+ManagementResource::ManagementResource(const BasicString path) noexcept
 	: resource_path_(path)
 	, is_connected_(false)
 {
 }
 
 
-void ManagementResource::Connect(const bstr_t path, const ConnectionOptions options) noexcept(false)
+void ManagementResource::Connect(const BasicString path, const ConnectionOptions options) noexcept(false)
 {
 	SetOptions(options);
 	SetPath(path);
@@ -40,9 +40,9 @@ void ManagementResource::Connect(const bstr_t path, const ConnectionOptions opti
 
 		ComExceptionFactory::ThrowIfFailed(hr);
 
-		const auto username = options_.username.has_value() ? options.username.value() : bstr_t();
-		const auto locale = options_.locale.has_value() ? options.locale.value() : bstr_t();
-		const auto authority = options_.authority.has_value() ? options.authority.value() : bstr_t();
+		const auto username = options_.username.has_value() ? options.username.value() : BasicString();
+		const auto locale = options_.locale.has_value() ? options.locale.value() : BasicString();
+		const auto authority = options_.authority.has_value() ? options.authority.value() : BasicString();
 
 		hr = locator_->ConnectServer(resource_path_,
 																 username,
@@ -70,19 +70,19 @@ void ManagementResource::Connect() noexcept(false)
 }
 
 
-std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const bstr_t query, const EnumerationOptions options) noexcept
+std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const BasicString query, const EnumerationOptions options) noexcept
 {
 	return std::make_unique<ManagementQueryProcessor>(*this, query, options);
 }
 
 
-std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const bstr_t query) noexcept
+std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const BasicString query) noexcept
 {
 	return std::make_unique<ManagementQueryProcessor>(*this, query);
 }
 
 
-bstr_t ManagementResource::GetPassword() const
+BasicString ManagementResource::GetPassword() const
 {
 	if (options_.secure_password.has_value())
 	{
@@ -90,6 +90,6 @@ bstr_t ManagementResource::GetPassword() const
 		return access->GetData();
 	}
 
-	return bstr_t();
+	return BasicString();
 }
 

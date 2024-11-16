@@ -5,7 +5,7 @@
 using namespace wmi;
 
 
-SecureString::SecureString(const bstr_t&& unprotected_data)
+SecureString::SecureString(const BasicString&& unprotected_data)
 {
 	ProtectMemory(std::move(unprotected_data));
 }
@@ -31,13 +31,13 @@ void SecureString::FreeMemory() const noexcept
 }
 
 
-void SecureString::ProtectMemory(const bstr_t&& unprotected_data) const
+void SecureString::ProtectMemory(const BasicString&& unprotected_data) const
 {
 	encrypted_data_.resize(unprotected_data.length());
 
 	std::memcpy(&encrypted_data_[0], &unprotected_data, unprotected_data.length() * sizeof(tchar));
 
-	if (!CryptProtectMemory(&encrypted_data_[0], static_cast<DWORD>(encrypted_data_.size() * sizeof(tchar)), CRYPTPROTECTMEMORY_SAME_PROCESS))
+	if (!CryptProtectMemory(&encrypted_data_[0], static_cast<Dword>(encrypted_data_.size() * sizeof(tchar)), CRYPTPROTECTMEMORY_SAME_PROCESS))
 	{
 		// Failed
 		return;
@@ -47,7 +47,7 @@ void SecureString::ProtectMemory(const bstr_t&& unprotected_data) const
 
 void SecureString::UnprotectMemory() const
 {
-	if (!CryptUnprotectMemory(&encrypted_data_[0], static_cast<DWORD>(encrypted_data_.size() * sizeof(tchar)), CRYPTPROTECTMEMORY_SAME_PROCESS))
+	if (!CryptUnprotectMemory(&encrypted_data_[0], static_cast<Dword>(encrypted_data_.size() * sizeof(tchar)), CRYPTPROTECTMEMORY_SAME_PROCESS))
 	{
 		return;
 	}
