@@ -4,9 +4,9 @@
 #include <wmi/common/defs.h>
 
 #include <wmi/management/enumeration-options.h>
+#include <wmi/management/management-resource.h>
 #include <wmi/management/management-query-stream.h>
 #include <wmi/management/management-query-iterator.h>
-#include <wmi/management/management-resource.h>
 
 
 namespace wmi {
@@ -17,16 +17,23 @@ public:
 	ManagementQueryProcessor(const ManagementResource& resource, const bstr_t query, const EnumerationOptions enumeration_options) noexcept;
 	ManagementQueryProcessor(const ManagementResource& resource, const bstr_t query) noexcept;
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementObjectQueryStream GetStream() noexcept(false)
+
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementQueryStream<ManagementObject> GetStream() noexcept(false)
 	{
-		return ManagementObjectQueryStream(resource_->services_, InternalQueryExecute(), enumeration_options_);
+		return ManagementQueryStream<ManagementObject>(resource_->services_, InternalQueryExecute(), enumeration_options_);
 	}
 
 	template <typename T>
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementQueryStream<T, MappedManagementQueryIterator<T>> GetStream() noexcept(false)
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementQueryStream<T> GetStream()
 	{
-		return ManagementQueryStream<T, MappedManagementQueryIterator<T>>(resource_->services_, InternalQueryExecute(), enumeration_options_);
+		return ManagementQueryStream<T>(resource_->services_, InternalQueryExecute(), enumeration_options_);
 	}
+
+	// template <typename T>
+	// _WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementQueryStream<T, MappedManagementQueryIterator<T>> GetStream() noexcept(false)
+	// {
+	// 	return ManagementQueryStream<T, MappedManagementQueryIterator<T>>(resource_->services_, InternalQueryExecute(), enumeration_options_);
+	// }
 
 	_WMI_FORCEINLINE void SetQuery(const bstr_t query) noexcept {
 		query_ = query;

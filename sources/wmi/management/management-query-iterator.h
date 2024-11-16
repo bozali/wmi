@@ -7,32 +7,26 @@
 namespace wmi {
 
 template <typename T, typename TStream>
-class WMI_DLL ManagementQueryIteratorBase
+class ManagementQueryIterator
 {
 public:
 	using iterator_category = std::input_iterator_tag;
 	using difference_type = ptrdiff_t;
-	using value_type = const T;
-	using pointer = const T*;
-	using reference = const T&;
+	using value_type = const ManagementObject;
+	using pointer = const ManagementObject*;
+	using reference = const ManagementObject&;
 	using stream_type = TStream;
 
 
-	_WMI_FORCEINLINE ManagementQueryIteratorBase(const stream_type& stream, const bool end = true) noexcept
+	_WMI_FORCEINLINE ManagementQueryIterator(stream_type& stream, const bool end = true) noexcept
 		: stream_(stream)
 		, end_(end)
 	{
 	}
 
-	_WMI_FORCEINLINE ManagementQueryIteratorBase(const stream_type& other_stream) noexcept
-		: stream_(other_stream.stream_)
-		, end_(other_stream.end_)
+	_WMI_FORCEINLINE ManagementQueryIterator& operator=(const ManagementQueryIterator& other)
 	{
-	}
-
-	_WMI_FORCEINLINE ManagementQueryIteratorBase& operator=(const ManagementQueryIteratorBase& other)
-	{
-		if (this != other)
+		if (this != &other)
 		{
 			stream_ = other.stream_;
 			end_ = other.end_;
@@ -41,7 +35,7 @@ public:
 		return *this;
 	}
 
-	_WMI_FORCEINLINE ManagementQueryIteratorBase& operator++() noexcept
+	_WMI_FORCEINLINE ManagementQueryIterator& operator++() noexcept
 	{
 		if (!IsEffectiveEnd())
 		{
@@ -51,24 +45,24 @@ public:
 		return *this;
 	}
 
-	_WMI_FORCEINLINE ManagementQueryIteratorBase operator++(int) noexcept
+	_WMI_FORCEINLINE ManagementQueryIterator operator++(int) noexcept
 	{
 		auto temp = *this;
 		++*this;
 		return temp;
 	}
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE T operator*() noexcept(false)
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE T operator*() noexcept
 	{
 		return stream_.Current();
 	}
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bool operator!=(const ManagementQueryIteratorBase& other) noexcept
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bool operator!=(const ManagementQueryIterator& other) noexcept
 	{
 		return IsEffectiveEnd() != other.IsEffectiveEnd();
 	}
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bool operator==(const ManagementQueryIteratorBase& other) noexcept
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bool operator==(const ManagementQueryIterator& other) noexcept
 	{
 		return !(*this != other);
 	}
@@ -79,13 +73,13 @@ public:
 	}
 
 private:
-	const stream_type& stream_;
+	stream_type& stream_;
 	bool end_ = true;
 };
 
 
-template <typename T>
-class MappedManagementQueryIterator : public ManagementQueryIteratorBase<T, MappedManagementQueryIterator<T>> {};
-class ManagementObjectQueryIterator : public ManagementQueryIteratorBase<ManagementObject, ManagementObjectQueryStream> {};
+// template <typename T>
+// class MappedManagementQueryIterator : public ManagementQueryIterator<T, MappedManagementQueryStream<T>> { };
+// class ManagementObjectQueryIterator : public ManagementQueryIterator<ManagementObject> { };
 
 }

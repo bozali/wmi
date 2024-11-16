@@ -4,6 +4,7 @@
 #include <wmi/common/com-exception.h>
 
 #include <wmi/management/enumeration-options.h>
+#include <wmi/management/management-resource.h>
 #include <wmi/management/management-object.h>
 
 #include <type_traits>
@@ -11,7 +12,6 @@
 
 
 namespace wmi {
-
 
 template <typename T, typename = typename std::enable_if<std::is_default_constructible<T>::value>>
 _WMI_FORCEINLINE static void HandleManagementObjectMapped(const ManagementObject& from, T& to) {}
@@ -26,17 +26,15 @@ _WMI_ATTR_NODISCARD _WMI_FORCEINLINE T InternalManagementObjectHandler(const Man
 }
 
 
+template <typename T, typename TStream>
+class ManagementQueryIterator;
+
+
 template <typename T>
-class MappedManagementQueryIterator;
-class ManagementObjectQueryIterator;
-
-
-template <typename T, typename TIterator>
 class ManagementQueryStream
 {
 public:
-	using DataType = T;
-	using Iterator = TIterator;
+	using Iterator = ManagementQueryIterator<T, ManagementQueryStream<T>>;
 
 	_WMI_FORCEINLINE bool Next() noexcept(false)
 	{
@@ -49,7 +47,7 @@ public:
 			? std::chrono::duration_cast<milliseconds>(enumeration_options_.timeout.value()).count()
 			: WBEM_INFINITE;
 
-		ComExceptionFactory::ThrowIfFailed(enumerator_->Next(timeout, 1, object.GetAddressOf(), &returned));
+		ComExceptionFactory::ThrowIfFailed(enumerator_->Next(timeout, 1, &object, &returned));
 
 		if (is_done_ = returned == 0)
 		{
@@ -61,14 +59,16 @@ public:
 		return true;
 	}
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE T Current() noexcept
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE T Current() const noexcept
 	{
-		if constexpr (std::is_same<TIterator, MappedManagementQueryIterator<T>>::value)
+		if constexpr (!std::is_same<Iterator, ManagementQueryIterator<ManagementObject, ManagementQueryStream<ManagementObject>>>::value)
 		{
 			return InternalManagementObjectHandler<T>(current_);
 		}
-		
-		return current_;
+		else
+		{
+			return current_;
+		}
 	}
 
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bool IsDone() const noexcept
@@ -76,12 +76,12 @@ public:
 		return is_done_;
 	}
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE Iterator begin()
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE Iterator begin() noexcept
 	{
 		return Iterator(*this, false);
 	}
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE Iterator end()
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE Iterator end() noexcept
 	{
 		return Iterator(*this, true);
 	}
@@ -93,7 +93,7 @@ private:
 		, enumeration_options_(options)
 		, is_done_(false)
 	{
-		Next(); 
+		Next();
 	}
 
 private:
@@ -106,10 +106,5 @@ private:
 
 	friend class ManagementQueryProcessor;
 };
-
-
-template <typename T>
-using MappedManagementQueryStream = ManagementQueryStream<T, MappedManagementQueryIterator<T>>;
-using ManagementObjectQueryStream = ManagementQueryStream<ManagementObject, ManagementObjectQueryIterator>;
 
 }

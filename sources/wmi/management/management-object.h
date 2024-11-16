@@ -18,6 +18,8 @@ public:
 
 	void Put() noexcept(false);
 
+	_WMI_ATTR_NODISCARD const variant_t operator[](const bstr_t property_name) const noexcept;
+
 private:
 	explicit ManagementObject(microsoft::com_ptr<IWbemServices> services, microsoft::com_ptr<IWbemClassObject> object) noexcept;
 	ManagementObject() = default;
@@ -26,8 +28,7 @@ private:
 	microsoft::com_ptr<IWbemClassObject> object_;
 	microsoft::com_ptr<IWbemServices> services_;
 
-
-	template <typename T, typename TIterator>
+	template <typename T>
 	friend class ManagementQueryStream;
 	friend class ManagementResource;
 };

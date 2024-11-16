@@ -1,14 +1,29 @@
 #include <wmi/common/secure-string-access.h>
-#include <wmi/management/management-query-processor.h>
+#include <wmi/management/management-query-iterator.h>
+#include <wmi/management/management-query-stream.h>
 #include <wmi/management/management-resource.h>
 #include <wmi/management/enumeration-options.h>
 #include <wmi/common/secure-string.h>
 #include <wmi/common/com-exception.h>
 #include <wmi/common/com-manager.h>
 
+#include <wmi/management/management-query-processor.h>
+
 #include <iostream>
 #include <string>
 #include <memory>
+
+
+struct Win32_Processor
+{
+	bstr_t name;
+};
+
+_WMI_FORCEINLINE static void HandleManagementObjectMapped(const wmi::ManagementObject& from, Win32_Processor& to) {
+	to.name = from[TEXT("Name")].bstrVal;
+}
+
+
 
 
 int main()
@@ -23,8 +38,16 @@ int main()
 		auto query_processor = resource->GetQueryProcessor(TEXT("SELECT * FROM Win32_Processor"));
 		auto stream = query_processor->GetStream();
 
-		for (auto object : stream)
+		for (auto it : stream)
 		{
+			std::wcout << it[TEXT("Name")].bstrVal << std::endl;
+		}
+		
+		auto mapped_stream = query_processor->GetStream<Win32_Processor>();
+
+		for (auto it : mapped_stream)
+		{
+			std::wcout << it.name << std::endl;
 		}
 
 	}

@@ -45,6 +45,16 @@ void ManagementObject::Put() noexcept(false)
 
 
 ManagementObject::ManagementObject(microsoft::com_ptr<IWbemServices> services, microsoft::com_ptr<IWbemClassObject> object) noexcept
+	: services_(services)
+	, object_(object)
 {
 }
 
+
+const variant_t ManagementObject::operator[](const bstr_t property_name) const noexcept
+{
+	variant_t value;
+	ComExceptionFactory::ThrowIfFailed(object_->Get(property_name, 0, &value, nullptr, nullptr));
+
+	return value;
+}
