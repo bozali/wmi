@@ -29,12 +29,6 @@ public:
 		return ManagementQueryStream<T>(resource_->services_, InternalQueryExecute(), enumeration_options_);
 	}
 
-	// template <typename T>
-	// _WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementQueryStream<T, MappedManagementQueryIterator<T>> GetStream() noexcept(false)
-	// {
-	// 	return ManagementQueryStream<T, MappedManagementQueryIterator<T>>(resource_->services_, InternalQueryExecute(), enumeration_options_);
-	// }
-
 	_WMI_FORCEINLINE void SetQuery(const BasicString query) noexcept {
 		query_ = query;
 	}

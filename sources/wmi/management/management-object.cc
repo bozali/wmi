@@ -4,6 +4,11 @@
 using namespace wmi;
 
 
+ManagementObjectProxy ManagementObject::Proxy() const
+{
+	return ManagementObjectProxy(*this);
+}
+
 void ManagementObject::Set(const BasicString property_name, Variant value) noexcept(false)
 {
 	// TODO Conversion to variant_t
@@ -124,7 +129,7 @@ const Variant ManagementObject::operator[](const BasicString property_name) cons
 		return Variant(static_cast<bool>(fetched_value.boolVal));
 
 	case VT_BSTR:
-		return Variant(fetched_value.bstrVal);
+		return Variant(BasicString(fetched_value.bstrVal));
 
 	default:
 		throw std::exception("Variant type not registered");
