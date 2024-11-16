@@ -70,6 +70,40 @@ void ManagementResource::Connect() noexcept(false)
 }
 
 
+ManagementObject ManagementResource::ExecuteMethod(const BasicString class_name, const BasicString method_name, std::optional<ManagementObject::ParameterSet> parameters) noexcept(false)
+{
+	microsoft::com_ptr<IWbemClassObject> class_object;
+	microsoft::com_ptr<IWbemClassObject> input_parameter;
+	microsoft::com_ptr<IWbemClassObject> input_parameter_instances;
+
+	ComExceptionFactory::ThrowIfFailed(services_->GetObjectW(class_name, 0, nullptr, class_object.GetAddressOf(), nullptr));
+	ComExceptionFactory::ThrowIfFailed(class_object->GetMethod(method_name, 0, input_parameter.GetAddressOf(), nullptr));
+
+	if (parameters.has_value() && !parameters.value().empty())
+	{
+		ComExceptionFactory::ThrowIfFailed(input_parameter->SpawnInstance(0, input_parameter_instances.GetAddressOf()));
+
+		for (const auto& param : parameters.value())
+		{
+			auto variant = internal::VariantCast(param.second);
+			ComExceptionFactory::ThrowIfFailed(input_parameter_instances->Put(param.first, 0, &variant, 0));
+		}
+	}
+
+	microsoft::com_ptr<IWbemClassObject> output_parameter_instances;
+
+	ComExceptionFactory::ThrowIfFailed(services_->ExecMethod(class_name,
+																													 method_name,
+																													 0,
+																													 nullptr,
+																													 input_parameter_instances.Get(),
+																													 output_parameter_instances.GetAddressOf(),
+																													 nullptr));
+
+	return ManagementObject(services_, output_parameter_instances);
+}
+
+
 std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const BasicString query, const EnumerationOptions options) noexcept
 {
 	return std::make_unique<ManagementQueryProcessor>(*this, query, options);

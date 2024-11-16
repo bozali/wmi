@@ -54,6 +54,12 @@
     <ClInclude Include="management\management-query-iterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="common\variant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\basic-string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\secure-string.cc">

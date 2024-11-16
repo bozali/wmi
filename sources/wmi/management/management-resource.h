@@ -3,7 +3,11 @@
 #include <wmi/common/secure-string.h>
 #include <wmi/common/non-copyable.h>
 #include <wmi/common/exports.h>
+#include <wmi/common/variant.h>
 
+#include <wmi/management/management-object.h>
+
+#include <unordered_map>
 #include <string_view>
 #include <optional>
 #include <chrono>
@@ -38,9 +42,11 @@ public:
 	void Connect(const BasicString path, const ConnectionOptions options) noexcept(false);
 
 	/**
-	 * 
+	 *
 	 */
 	void Connect() noexcept(false);
+
+	ManagementObject ExecuteMethod(const BasicString class_name, const BasicString method_name, std::optional<ManagementObject::ParameterSet> parameters = std::nullopt) noexcept(false);
 
 	/**
 	 *

@@ -10,19 +10,18 @@
 #include <WbemIdl.h>
 
 namespace microsoft {
-	template <typename T>
-	using com_ptr = Microsoft::WRL::ComPtr<T>;
+template <typename T>
+using com_ptr = Microsoft::WRL::ComPtr<T>;
 }
 
 #include <string>
 #include <string_view>
-#include <variant>
 
 namespace std {
 
 #ifdef UNICODE
-using tstring = std::wstring;
-using tstring_view = std::wstring_view;
+using tstring = wstring;
+using tstring_view = wstring_view;
 #else
 using tstring = std::string;
 using tstring_view = std::string_view;
@@ -71,24 +70,7 @@ using Dword = DWORD;
 using ULong = ULONG;
 using Long = LONG;
 
-
-using Variant = std::variant <
-	BasicString,
-	Char,
-	Byte,
-	UInt16,
-	UInt32,
-	UInt64,
-	Int8,
-	Int16,
-	Int32,
-	Int64,
-	ULong,
-	Long,
-	bool>;
-
 }
-
 
 namespace wmi::internal {
 

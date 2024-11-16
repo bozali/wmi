@@ -45,6 +45,40 @@ void ManagementObject::Put() noexcept(false)
 }
 
 
+ManagementObject ManagementObject::ExecuteMethod(const BasicString method_name, std::optional<ParameterSet> parameters) noexcept(false)
+{
+	microsoft::com_ptr<IWbemClassObject> input_parameters;
+	microsoft::com_ptr<IWbemClassObject> input_parameter_instances;
+
+	object_->GetMethod(method_name, 0, input_parameters.GetAddressOf(), nullptr);
+
+	if (parameters.has_value() && !parameters.value().empty())
+	{
+		input_parameters->SpawnInstance(0, input_parameters.GetAddressOf());
+
+		for (const auto& param : parameters.value())
+		{
+			auto variant = internal::VariantCast(param.second);
+			ComExceptionFactory::ThrowIfFailed(input_parameter_instances->Put(param.first, 0, &variant, 0));
+		}
+	}
+
+	BasicString system_property_path = std::get<BasicString>((*this)[TEXT("__PATH")]);
+
+	microsoft::com_ptr<IWbemClassObject> output_parameter_instances;
+
+	ComExceptionFactory::ThrowIfFailed(services_->ExecMethod(system_property_path,
+																													 method_name,
+																													 0,
+																													 nullptr,
+																													 parameters.has_value() ? input_parameter_instances.Get() : nullptr,
+																													 output_parameter_instances.GetAddressOf(),
+																													 nullptr));
+		
+	return ManagementObject(services_, output_parameter_instances);
+}
+
+
 ManagementObject::ManagementObject(microsoft::com_ptr<IWbemServices> services, microsoft::com_ptr<IWbemClassObject> object) noexcept
 	: services_(services)
 	, object_(object)

@@ -9,10 +9,12 @@
 
 #include <wmi/management/management-query-processor.h>
 
+#include <unordered_map>
 #include <iostream>
 #include <string>
 #include <memory>
 #include <variant>
+
 
 
 int main()
@@ -20,6 +22,17 @@ int main()
 	try
 	{
 		wmi::ComManager::Initialize();
+
+
+		auto resource = std::make_unique<wmi::ManagementResource>(TEXT("root\\cimv2"));
+		resource->Connect();
+
+		wmi::ManagementObject::ParameterSet parameters
+		{
+			{ TEXT("CommandLine"), wmi::Variant(wmi::BasicString(TEXT("notepad.exe"))) }
+		};
+
+		resource->ExecuteMethod(TEXT("Win32_Process"), TEXT("Create"), parameters);
 
 		/*
 		std::variant<bstr_t, int8_t, int16_t, int32_t, uint64_t, uint8_t, uint16_t, uint32_t, uint64_t> v1;
