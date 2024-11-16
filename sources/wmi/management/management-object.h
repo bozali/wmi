@@ -4,7 +4,9 @@
 #include <wmi/common/defs.h>
 #include <wmi/common/variant.h>
 #include <wmi/common/basic-string.h>
+
 #include <wmi/management/management-mapping.h>
+#include <wmi/management/internal/management-object-proxy.h>
 
 #include <unordered_map>
 #include <optional>
@@ -12,27 +14,6 @@
 
 
 namespace wmi {
-
-class ManagementObject;
-
-class ManagementObjectProxy
-{
-public:
-	ManagementObjectProxy(const ManagementObject& object)
-		: object_(object)
-	{
-	}
-
-	template <typename T>
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE T As() const noexcept
-	{
-		return InternalManagementObjectHandler<T>(object_);
-	}
-
-private:
-	const ManagementObject& object_;
-};
-
 
 class WMI_DLL ManagementObject
 {
@@ -42,7 +23,7 @@ public:
 	ManagementObject(const ManagementObject&) = default;
 	ManagementObject& operator=(const ManagementObject&) = default;
 
-	ManagementObjectProxy Proxy() const;
+	internal::ManagementObjectProxy Proxy() const;
 
 	void Set(const BasicString property_name, Variant value) noexcept(false);
 

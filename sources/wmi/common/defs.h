@@ -37,7 +37,6 @@ using tchar = char;
 using tbyte = char;
 #endif // UNICODE
 
-
 #define _WMI_SEALED final
 #define _WMI_ATTR_NODISCARD _NODISCARD
 

@@ -165,6 +165,7 @@
     <ClInclude Include="common\secure-string.h" />
     <ClInclude Include="common\variant.h" />
     <ClInclude Include="management\enumeration-options.h" />
+    <ClInclude Include="management\internal\management-object-proxy.h" />
     <ClInclude Include="management\management-mapping.h" />
     <ClInclude Include="management\management-object.h" />
     <ClInclude Include="management\management-query-iterator.h" />

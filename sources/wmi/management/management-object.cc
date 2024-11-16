@@ -2,6 +2,7 @@
 #include <wmi/common/com-exception.h>
 
 using namespace wmi;
+using namespace wmi::internal;
 
 
 ManagementObjectProxy ManagementObject::Proxy() const
@@ -73,7 +74,7 @@ ManagementObject ManagementObject::ExecuteMethod(const BasicString method_name, 
 																													 parameters.has_value() ? input_parameter_instances.Get() : nullptr,
 																													 output_parameter_instances.GetAddressOf(),
 																													 nullptr));
-		
+
 	return ManagementObject(services_, output_parameter_instances);
 }
 

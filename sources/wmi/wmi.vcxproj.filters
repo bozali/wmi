@@ -63,6 +63,9 @@
     <ClInclude Include="management\management-mapping.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="management\internal\management-object-proxy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\secure-string.cc">
