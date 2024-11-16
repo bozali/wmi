@@ -104,6 +104,18 @@ ManagementObject ManagementResource::ExecuteMethod(const BasicString class_name,
 }
 
 
+ManagementObject ManagementResource::CreateInstance(const BasicString class_name) noexcept(false)
+{
+	microsoft::com_ptr<IWbemClassObject> class_definition;
+	microsoft::com_ptr<IWbemClassObject> instance;
+
+	ComExceptionFactory::ThrowIfFailed(services_->GetObjectW(class_name, 0, nullptr, class_definition.GetAddressOf(), nullptr));
+	ComExceptionFactory::ThrowIfFailed(class_definition->SpawnInstance(0, instance.GetAddressOf()));
+
+	return ManagementObject(services_, instance);
+}
+
+
 std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const BasicString query, const EnumerationOptions options) noexcept
 {
 	return std::make_unique<ManagementQueryProcessor>(*this, query, options);

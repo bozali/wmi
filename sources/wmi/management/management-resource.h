@@ -30,65 +30,157 @@ struct ConnectionOptions
 };
 
 
+/**
+ * The `ManagementResource` class provides methods for connecting to and interacting with a
+ * specified WMI namespace or resource. It allows for executing queries, invoking methods,
+ * and retrieving or modifying system information via WMI. The class supports setting connection
+ * options such as credentials and impersonation level, and provides methods for querying
+ * and managing WMI resources.
+ *
+ * This class is typically used to manage WMI resources on a Windows system, enabling interactions
+ * with management data through flexible query mechanisms and method invocations.
+ */
 class WMI_DLL ManagementResource : private NonCopyable
 {
 public:
+	/**
+	 * This constructor initializes a `ManagementResource` instance by setting the path to the 
+	 * WMI namespace or resource and applying the specified connection options. The path and options 
+	 * are used to configure the connection to the WMI resource, allowing further interactions such as 
+	 * querying and executing methods.
+	 *
+	 * @param path The path to the WMI namespace or resource (e.g., "root\\cimv2").
+	 * @param options The connection options, which may include credentials, impersonation level, and other connection-specific settings.
+	 */
 	ManagementResource(const BasicString path, ConnectionOptions options) noexcept;
+
+	/**
+	 * This constructor initializes a `ManagementResource` instance by setting the path to the 
+	 * WMI namespace or resource. Connection options are left to their default settings, 
+	 * which can be customized later using the `SetOptions` method. This constructor is useful 
+	 * when the connection options do not need to be immediately configured.
+	 *
+	 * @param path The path to the WMI namespace or resource (e.g., "root\\cimv2").
+	 */
 	ManagementResource(const BasicString path) noexcept;
 
 	/**
-	 *
+	 * This method connects to a WMI namespace or resource using the provided path
+	 * and connection options. It initializes the WMI connection context, enabling
+   * subsequent queries and operations on the management data.
+	 * 
+	 * @param path The path to the WMI namespace or resource to connect to (e.g., "root\\cimv2").
+   * @param options An object containing connection options, such as credentials or impersonation level.
 	 */
 	void Connect(const BasicString path, const ConnectionOptions options) noexcept(false);
 
 	/**
-	 *
+	 * This method connects to a WMI namespace or resource using the current path 
+   * and connection options. The path and options can be set explicitly through 
+   * `SetPath` and `SetOptions` or provided in the constructor.
 	 */
 	void Connect() noexcept(false);
 
+	/**
+	 * This method executes a specified method from a WMI class, allowing interaction 
+	 * with the class's management functions. Optionally, a set of parameters can be provided 
+	 * to customize the method's execution.
+	 *
+	 * @param class_name The name of the WMI class containing the method to execute.
+	 * @param method_name The name of the method to invoke within the specified class.
+	 * @param parameters (Optional) A set of parameters to pass to the method. Defaults to an empty set if not provided.
+	 * 
+	 * @return A `ManagementObject` representing the result of the method execution, which may contain output data or status.
+	 */
 	ManagementObject ExecuteMethod(const BasicString class_name, const BasicString method_name, std::optional<ManagementObject::ParameterSet> parameters = std::nullopt) noexcept(false);
 
 	/**
+	 * This method creates a new instance of the given WMI class, which can be used
+	 * to manipulate or interact with management data specific to that class. The instance
+	 * is initialized with default values and can be further populated with properties as needed.
 	 *
+	 * @param class_name The name of the WMI class for which to create a new instance.
+	 *
+	 * @return A `ManagementObject` representing the newly created instance of the specified class.
+	 */
+	ManagementObject CreateInstance(const BasicString class_name) noexcept(false);
+
+	/**
+	 * This method creates and returns a `ManagementQueryProcessor` that is configured 
+	 * to execute the specified query with the provided enumeration options. The processor 
+	 * can be used to retrieve and process query results from the WMI service.
+	 *
+	 * @param query The WMI query string to be processed (e.g., "SELECT * FROM Win32_OperatingSystem").
+	 * @param options The enumeration options to control the behavior of the query, such as the scope or timeout.
+	 * 
+	 * @return A unique pointer to a `ManagementQueryProcessor` configured to execute the specified query.
 	 */
 	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const BasicString query, const EnumerationOptions options) noexcept;
 
 	/**
+	 * This method creates and returns a `ManagementQueryProcessor` that is configured
+	 * to execute the specified query. The processor can be used to retrieve and process
+	 * query results from the WMI service, with default options applied.
 	 *
+	 * @param query The WMI query string to be processed (e.g., "SELECT * FROM Win32_OperatingSystem").
+	 *
+	 * @return A unique pointer to a `ManagementQueryProcessor` configured to execute the specified query.
 	 */
 	std::unique_ptr<ManagementQueryProcessor> GetQueryProcessor(const BasicString query) noexcept;
 
 
 	/**
-	 * Sets the connection options.
+	 * This method configures the connection options that will be used when establishing
+	 * a connection to the WMI resource. The options may include credentials, impersonation
+	 * level, timeout settings, and other parameters that control how the connection behaves.
+	 * 
+	 * @param options The connection options to be applied, including credentials, impersonation level,
+	 *                and other connection-specific settings.
 	 */
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE void SetOptions(const ConnectionOptions options) noexcept {
 		options_ = options;
 	}
 
 	/**
-	 * Sets the WMI resouce path.
+	 * This method defines the path to the WMI namespace or resource that will be used
+	 * for subsequent operations, such as querying or executing methods. The path specifies
+	 * the location of the WMI resource, typically in the format "root\\namespace".
+	 *
+	 * @param path The path to the WMI namespace or resource (e.g., "root\\cimv2").
 	 */
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE void SetPath(const BasicString path) noexcept {
 		resource_path_ = path;
 	}
 
 	/**
-	 * Returns the conection options.
+	 * This method returns a reference to the current connection options that are
+	 * used when interacting with the WMI resource. The options include credentials,
+	 * impersonation level, and other connection-specific settings that control how
+	 * the connection is managed and queries are executed.
+	 * 
+   * @return A constant reference to the `ConnectionOptions` object containing the current settings.
 	 */
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE const ConnectionOptions& Options() const noexcept {
 		return options_;
 	}
 
 	/**
-	 * Returns the WMI resource path.
+	 * This method returns the path that specifies the WMI namespace or resource
+	 * currently set for interaction. The path is typically in the format "root\\namespace"
+	 * and is used to define the location of the WMI resource for queries and operations.
+	 *
+	 * @return The current path to the WMI namespace or resource (e.g., "root\\cimv2").
 	 */
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE BasicString Path() const noexcept {
 		return resource_path_;
 	}
 
 	/**
-	 * Checks if the service is connected.
+	 * This method determines if a valid connection to the WMI resource has been established.
+	 * It returns `true` if the connection is active, and `false` otherwise. This can be used
+	 * to verify the connection status before attempting further operations on the resource.
+	 *
+	 * @return `true` if the connection is active, `false` if no connection is established.
 	 */
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE bool IsConnected() const noexcept {
 		return is_connected_;
@@ -98,13 +190,12 @@ private:
 	BasicString GetPassword() const;
 
 private:
-	ConnectionOptions options_;
-
-	bool is_connected_;
-	BasicString resource_path_;
-
 	microsoft::com_ptr<IWbemServices> services_;
 	microsoft::com_ptr<IWbemLocator> locator_;
+
+	ConnectionOptions options_;
+	BasicString resource_path_;
+	bool is_connected_;
 
 	friend class ManagementQueryProcessor;
 };

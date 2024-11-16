@@ -26,7 +26,6 @@ using Variant = std::variant <
 
 namespace internal {
 
-
 WMI_EXTERN_C static variant_t VariantCast(const Variant& input)
 {
 	variant_t variant;
