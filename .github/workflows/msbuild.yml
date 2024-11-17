@@ -48,3 +48,8 @@ jobs:
         path: ${{env.SOLUTION_FILE_PATH}}/x64/Release
         filename: wmi.zip
         exclusions: '*.pdb *.exp'
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: artifacts
+        path: ${{env.SOLUTION_FILE_PATH}}/wmi.zip
