@@ -131,3 +131,39 @@ int main()
 }
 
 ```
+
+## Events
+
+WMI provides functionalities to subscribe to events. We are able to react to events for example
+a new instance was created like a process has been spawned.
+
+### Subscribing to events
+
+In this example we are writing the `ProcessId` and `Name` everytime a process is spawned on the machine.
+
+```c++
+
+int main()
+{
+    // ...
+
+    auto event_bus = resource->GetEventBus();
+
+	auto token = event_bus->Subscribe(TEXT("SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'"), [](const wmi::ManagementObject& obj)
+                                        {
+                                            auto x = obj["TargetInstance"];
+                                            auto y = std::get<wmi::ManagementObject>(x);
+
+                                            auto process = y.Proxy().As< Win32_Process>();
+
+                                            std::wcout << process.process_id << std::endl;
+                                            std::wcout << process.name << std::endl;
+                                        });
+
+
+		std::this_thread::sleep_for(std::chrono::seconds(15));
+
+    // ...
+}
+
+```
