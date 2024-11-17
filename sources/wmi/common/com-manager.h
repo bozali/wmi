@@ -35,6 +35,7 @@ struct ProcessSecurity
 	AuthenticationLevel authentication = AuthenticationLevel::kDefault;
 };
 
+// TODO Create proxy settings
 
 class WMI_DLL ComManager
 {

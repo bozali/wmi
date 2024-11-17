@@ -16,16 +16,19 @@
 #include <string>
 #include <memory>
 #include <variant>
+#include <thread>
 
 
-struct Win32_Processor
+struct Win32_Process
 {
+	wmi::UInt32 process_id;
 	wmi::BasicString name;
 };
 
 
-_WMI_FORCEINLINE static void HandleManagementObjectMapped(const wmi::ManagementObject& from, Win32_Processor& to) {
-	to.name = std::get<wmi::BasicString>(from[TEXT("Name")]);
+_WMI_FORCEINLINE static void HandleManagementObjectMapped(const wmi::ManagementObject& from, Win32_Process& to) {
+	to.process_id = std::get<wmi::Int32>(from["ProcessId"]);
+	to.name = std::get<wmi::BasicString>(from["Name"]);
 }
 
 
@@ -39,9 +42,25 @@ int main()
 
 		wmi::ComManager::Initialize(security);
 
+
 		// TODO Must be shared_ptr make factory method...
-		auto resource = std::make_shared<wmi::ManagementResource>(TEXT("root\\cimv2"));
+		auto resource = std::make_shared<wmi::ManagementResource>("root\\cimv2");
 		resource->Connect();
+
+		auto query_processor = resource->GetQueryProcessor("SELECT * FROM Win32_Process");
+		auto stream = query_processor->GetStream<Win32_Process>();
+
+		auto found = std::find_if(std::begin(stream), std::end(stream), [](const Win32_Process& process)
+															{
+																return wcscmp(process.name, TEXT("code.exe"));
+															});
+
+		if (found != std::end(stream))
+		{
+			std::wcout << (*found).name << std::endl;
+		}
+
+		/*
 
 		auto event_bus = resource->GetEventBus();
 
@@ -50,8 +69,16 @@ int main()
 																				auto x = obj["TargetInstance"];
 																				auto y = std::get<wmi::ManagementObject>(x);
 
-																				std::wcout << std::get<wmi::BasicString>(y["__PATH"]) << std::endl;
+																				auto process = y.Proxy().As< Win32_Process>();
+
+																				std::wcout << process.process_id << std::endl;
+																				std::wcout << process.name << std::endl;
 																			});
+
+
+		std::this_thread::sleep_for(std::chrono::seconds(15));
+		*/
+
 	}
 	catch (const wmi::ComException& ex)
 	{

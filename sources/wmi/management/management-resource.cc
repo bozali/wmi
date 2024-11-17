@@ -104,7 +104,7 @@ ManagementObject ManagementResource::ExecuteMethod(const BasicString class_name,
 }
 
 
-std::unique_ptr<ManagementEventBus> ManagementResource::GetEventBus()
+std::unique_ptr<ManagementEventBus> ManagementResource::GetEventBus() noexcept(false)
 {
 	if (event_bus_ == nullptr)
 	{
@@ -127,15 +127,15 @@ ManagementObject ManagementResource::CreateInstance(const BasicString class_name
 }
 
 
-std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const BasicString query, const EnumerationOptions options) noexcept
+std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(BasicString query, const EnumerationOptions options) noexcept
 {
-	return std::make_unique<ManagementQueryProcessor>(*this, query, options);
+	return std::make_unique<ManagementQueryProcessor>(shared_from_this(), query, options);
 }
 
 
 std::unique_ptr<ManagementQueryProcessor> ManagementResource::GetQueryProcessor(const BasicString query) noexcept
 {
-	return std::make_unique<ManagementQueryProcessor>(*this, query);
+	return std::make_unique<ManagementQueryProcessor>(shared_from_this(), query);
 }
 
 

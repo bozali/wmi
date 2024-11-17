@@ -3,16 +3,16 @@
 using namespace wmi;
 
 
-ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& resource, const BasicString query, EnumerationOptions enumeration_options) noexcept
-	: resource_(&resource)
+ManagementQueryProcessor::ManagementQueryProcessor(std::shared_ptr<ManagementResource> resource, const BasicString query, EnumerationOptions enumeration_options) noexcept
+	: resource_(resource)
 	, query_(query)
 	, enumeration_options_(enumeration_options)
 {
 }
 
 
-ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& resource, const BasicString query) noexcept
-	: resource_(&resource)
+ManagementQueryProcessor::ManagementQueryProcessor(std::shared_ptr<ManagementResource> resource, const BasicString query) noexcept
+	: resource_(resource)
 	, query_(query)
 {
 }
@@ -21,7 +21,6 @@ ManagementQueryProcessor::ManagementQueryProcessor(const ManagementResource& res
 microsoft::com_ptr<IEnumWbemClassObject> ManagementQueryProcessor::InternalQueryExecute() noexcept(false)
 {
 	microsoft::com_ptr<IEnumWbemClassObject> enumerator;
-	HRESULT hr = S_OK;
 
 	long flags = WBEM_FLAG_FORWARD_ONLY;
 
@@ -40,13 +39,18 @@ microsoft::com_ptr<IEnumWbemClassObject> ManagementQueryProcessor::InternalQuery
 		flags |= WBEM_FLAG_RETURN_IMMEDIATELY;
 	}
 
-	hr = resource_->services_->ExecQuery(BasicString("WQL"),
-																			 query_,
-																			 flags,
-																			 nullptr,
-																			 enumerator.GetAddressOf());
+	if (std::shared_ptr<ManagementResource> ptr = resource_.lock())
+	{
 
-	ComExceptionFactory::ThrowIfFailed(hr);
-	return enumerator;
+		ComExceptionFactory::ThrowIfFailed(ptr->services_->ExecQuery(BasicString("WQL"),
+																																 query_,
+																																 flags,
+																																 nullptr,
+																																 enumerator.GetAddressOf()));
+
+		return enumerator;
+	}
+
+	throw std::exception("ManagementResource is already deleted");
 }
 

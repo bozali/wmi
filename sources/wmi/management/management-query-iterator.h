@@ -77,9 +77,4 @@ private:
 	bool end_ = true;
 };
 
-
-// template <typename T>
-// class MappedManagementQueryIterator : public ManagementQueryIterator<T, MappedManagementQueryStream<T>> { };
-// class ManagementObjectQueryIterator : public ManagementQueryIterator<ManagementObject> { };
-
 }
