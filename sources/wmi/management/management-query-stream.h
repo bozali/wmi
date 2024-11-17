@@ -47,7 +47,7 @@ public:
 		return true;
 	}
 
-	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE const T& Current() const noexcept
+	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE T Current() const noexcept
 	{
 		if constexpr (!std::is_same<Iterator, ManagementQueryIterator<ManagementObject, ManagementQueryStream<ManagementObject>>>::value)
 		{

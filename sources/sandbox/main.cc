@@ -42,7 +42,6 @@ int main()
 
 		wmi::ComManager::Initialize(security);
 
-
 		// TODO Must be shared_ptr make factory method...
 		auto resource = std::make_shared<wmi::ManagementResource>("root\\cimv2");
 		resource->Connect();
@@ -50,14 +49,16 @@ int main()
 		auto query_processor = resource->GetQueryProcessor("SELECT * FROM Win32_Process");
 		auto stream = query_processor->GetStream<Win32_Process>();
 
-		auto found = std::find_if(std::begin(stream), std::end(stream), [](const Win32_Process& process)
+		auto found = std::find_if(stream.begin(), stream.end(), [&](Win32_Process process)
 															{
-																return wcscmp(process.name, TEXT("code.exe"));
+																bool r = wcscmp(process.name, TEXT("code.exe")) == 0;
+
+																return r;
 															});
 
-		if (found != std::end(stream))
+		if (found != stream.end())
 		{
-			std::wcout << (*found).name << std::endl;
+			// std::wcout << (*found).name << std::endl;
 		}
 
 		/*
@@ -78,7 +79,6 @@ int main()
 
 		std::this_thread::sleep_for(std::chrono::seconds(15));
 		*/
-
 	}
 	catch (const wmi::ComException& ex)
 	{
