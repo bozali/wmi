@@ -105,8 +105,9 @@ const Variant ManagementObject::operator[](const BasicString property_name) cons
 	case VT_I4:
 		return Variant(fetched_value.intVal);
 
-	case VT_I8:
-		return wmi::Variant(fetched_value.lVal);
+	// TODO Think about how we can get LONG values
+	// case VT_I8:
+	//  	return wmi::Variant(fetched_value.lVal);
 
 	case VT_UI1:
 		return Variant(fetched_value.bVal);
@@ -119,6 +120,14 @@ const Variant ManagementObject::operator[](const BasicString property_name) cons
 
 	case VT_UI8:
 		return Variant(fetched_value.ulVal);
+
+	case VT_UNKNOWN:
+	{
+		microsoft::com_ptr<IWbemClassObject> o1;
+		fetched_value.punkVal->QueryInterface(IID_IWbemClassObject, reinterpret_cast<void**>(o1.GetAddressOf()));
+
+		return Variant(ManagementObject(services_, o1));
+	}
 
 	case VT_BOOL:
 		return Variant(static_cast<bool>(fetched_value.boolVal));

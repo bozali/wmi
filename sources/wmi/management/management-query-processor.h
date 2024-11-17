@@ -17,7 +17,6 @@ public:
 	ManagementQueryProcessor(const ManagementResource& resource, const BasicString query, const EnumerationOptions enumeration_options) noexcept;
 	ManagementQueryProcessor(const ManagementResource& resource, const BasicString query) noexcept;
 
-
 	_WMI_ATTR_NODISCARD _WMI_FORCEINLINE ManagementQueryStream<ManagementObject> GetStream() noexcept(false)
 	{
 		return ManagementQueryStream<ManagementObject>(resource_->services_, InternalQueryExecute(), enumeration_options_);

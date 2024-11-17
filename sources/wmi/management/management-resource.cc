@@ -104,6 +104,17 @@ ManagementObject ManagementResource::ExecuteMethod(const BasicString class_name,
 }
 
 
+std::unique_ptr<ManagementEventBus> ManagementResource::GetEventBus()
+{
+	if (event_bus_ == nullptr)
+	{
+		event_bus_ = std::make_unique<ManagementEventBus>(shared_from_this());
+	}
+
+	return std::move(event_bus_);
+}
+
+
 ManagementObject ManagementResource::CreateInstance(const BasicString class_name) noexcept(false)
 {
 	microsoft::com_ptr<IWbemClassObject> class_definition;

@@ -45,6 +45,7 @@ private:
 	friend class ManagementQueryStream;
 	friend class ManagementResource;
 	friend class ManagementObject;
+	friend class ManagementEventSinkAdapter;
 };
 
 }

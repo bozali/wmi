@@ -66,6 +66,15 @@
     <ClInclude Include="management\internal\management-object-proxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="management\management-event-bus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="management\management-event-sink-adapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="management\management-subscription-token.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\secure-string.cc">
@@ -84,6 +93,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="management\management-object.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="management\management-event-bus.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="management\management-event-sink-adapter.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="management\management-subscription-token.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="common\variant.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

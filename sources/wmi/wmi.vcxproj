@@ -166,20 +166,27 @@
     <ClInclude Include="common\variant.h" />
     <ClInclude Include="management\enumeration-options.h" />
     <ClInclude Include="management\internal\management-object-proxy.h" />
+    <ClInclude Include="management\management-event-sink-adapter.h" />
+    <ClInclude Include="management\management-event-bus.h" />
     <ClInclude Include="management\management-mapping.h" />
     <ClInclude Include="management\management-object.h" />
     <ClInclude Include="management\management-query-iterator.h" />
     <ClInclude Include="management\management-query-processor.h" />
     <ClInclude Include="management\management-query-stream.h" />
     <ClInclude Include="management\management-resource.h" />
+    <ClInclude Include="management\management-subscription-token.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common\com-manager.cc" />
     <ClCompile Include="common\secure-string-access.cc" />
     <ClCompile Include="common\secure-string.cc" />
+    <ClCompile Include="common\variant.cc" />
+    <ClCompile Include="management\management-event-bus.cc" />
+    <ClCompile Include="management\management-event-sink-adapter.cc" />
     <ClCompile Include="management\management-object.cc" />
     <ClCompile Include="management\management-query-processor.cc" />
     <ClCompile Include="management\management-resource.cc" />
+    <ClCompile Include="management\management-subscription-token.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,6 +6,7 @@
 #include <wmi/common/variant.h>
 
 #include <wmi/management/management-object.h>
+#include <wmi/management/management-event-bus.h>
 
 #include <unordered_map>
 #include <string_view>
@@ -17,6 +18,8 @@ namespace wmi {
 
 class ManagementQueryProcessor;
 class EnumerationOptions;
+class ManagementEventBus;
+
 
 struct ConnectionOptions
 {
@@ -40,7 +43,7 @@ struct ConnectionOptions
  * This class is typically used to manage WMI resources on a Windows system, enabling interactions
  * with management data through flexible query mechanisms and method invocations.
  */
-class WMI_DLL ManagementResource : private NonCopyable
+class WMI_DLL ManagementResource : private NonCopyable, public std::enable_shared_from_this<ManagementResource>
 {
 public:
 	/**
@@ -93,6 +96,11 @@ public:
 	 * @return A `ManagementObject` representing the result of the method execution, which may contain output data or status.
 	 */
 	ManagementObject ExecuteMethod(const BasicString class_name, const BasicString method_name, std::optional<ManagementObject::ParameterSet> parameters = std::nullopt) noexcept(false);
+
+	/**
+	 * TODO
+	 */
+	std::unique_ptr<ManagementEventBus> GetEventBus();
 
 	/**
 	 * This method creates a new instance of the given WMI class, which can be used
@@ -197,7 +205,12 @@ private:
 	BasicString resource_path_;
 	bool is_connected_;
 
+	std::unique_ptr<ManagementEventBus> event_bus_;
+
+	friend class ManagementSubscriptionToken;
+	friend class ManagementEventSinkAdapter;
 	friend class ManagementQueryProcessor;
+	friend class ManagementEventBus;
 };
 
 }
