@@ -45,6 +45,6 @@ jobs:
 
     - uses: thedoctor0/zip-release@master
       with:
-        path: ${{env.SOLUTION_FILE_PATH}}/x64/Releases
+        path: ${{env.SOLUTION_FILE_PATH}}/x64/Release
         filename: wmi.zip
         exclusions: '*.pdb *.exp'
