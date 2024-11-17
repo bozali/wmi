@@ -154,7 +154,7 @@ int main()
                                             auto x = obj["TargetInstance"];
                                             auto y = std::get<wmi::ManagementObject>(x);
 
-                                            auto process = y.Proxy().As< Win32_Process>();
+                                            auto process = y.Proxy().As<Win32_Process>();
 
                                             std::wcout << process.process_id << std::endl;
                                             std::wcout << process.name << std::endl;
